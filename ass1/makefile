@@ -41,6 +41,9 @@ endif
 $(EXE): graphics.o lab.o
 	g++ $(FLAGS) $^ $(QUARTZ_LIBS) $(GRAPHICS_LIBS) -o $(EXE)
 
+test:
+	g++ test.cpp -o test
+
 # A generic make rule for creating a .o file from an identically named (sans extension) .cpp file
 # $< evaluates to the name of the _first_ dependency (the .cpp file in this case)
 # $@ evaluates to the name of the target (the .o file in this case)
@@ -53,10 +56,10 @@ $(EXE): graphics.o lab.o
 # example.o: example.cpp $(HDR)
 # 	g++ -c $(FLAGS) example.cpp
 
-backup:
-# Back up the source, makefile and Visual Studio project & solution. 
-	echo Backing up your files into ${BACKUP_FILENAME}
-	zip ${BACKUP_FILENAME} $(SRC) $(HDR) makefile easygl.sln easygl.vcxproj example_screenshot.png
+#backup:
+## Back up the source, makefile and Visual Studio project & solution. 
+#	echo Backing up your files into ${BACKUP_FILENAME}
+#	zip ${BACKUP_FILENAME} $(SRC) $(HDR) makefile easygl.sln easygl.vcxproj example_screenshot.png
 
 clean:
-	rm $(EXE) *.o
+	rm $(EXE) *.o *~ test .*.swp
