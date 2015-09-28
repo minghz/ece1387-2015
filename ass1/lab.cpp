@@ -134,103 +134,54 @@ void drawscreen (void) {
 	
 	{
 		/**************
-		 * Draw some rectangles using the indexed colours
+		 * Draw logic blocks 
 		 **************/
 
-		color_types color_indicies[] = {
-			LIGHTGREY,
-			DARKGREY,
-			WHITE,
-			BLACK,
-			BLUE,
-			GREEN,
-			YELLOW,
-			CYAN,
-			RED,
-			DARKGREEN,
-			MAGENTA
-		};
-
-		const float rectangle_width = 50;
+		const float rectangle_width = 60;
 		const float rectangle_height = rectangle_width;
-		const t_point start_point = t_point(150,30);
-		t_bound_box color_rectangle = t_bound_box(start_point, rectangle_width, rectangle_height);
+		const t_point start_point = t_point(120,120);
+		t_bound_box logic_block = t_bound_box(start_point, rectangle_width, rectangle_height);
 		
-		// text is UTF-8
-		drawtext (110, color_rectangle.get_ycenter(), "colors", 2*(start_point.x - 110), rectangle_height);
+    int n = 4;
+    int w = 4;
+		for(int i = 0; i < n; i++) {
 
-		for(size_t i = 0; i < sizeof(color_indicies)/sizeof(color_indicies[0]); ++i) {
-			setcolor(color_indicies[i]);
-			fillrect(color_rectangle);
-			color_rectangle += t_point(rectangle_width,0);
-		}
+      for(int j = 0; j < n; j++){
 
-		drawtext (400, color_rectangle.get_ycenter(), "fillrect", FLT_MAX, rectangle_height);
+        setcolor(LIGHTGREY);
+        fillrect(logic_block);
+        logic_block += t_point(rectangle_width*2,0);
 
-	}
+      }
 
+      logic_block += t_point(-rectangle_width*n*2,rectangle_height*2);
+    }
 
-	/*********
-	 * Draw some example text, with the bounding box functions
-	 *********/
-
-	{
-		const float text_example_width = 800;
-
-		const int num_lines = 2;
-		const int max_strings_per_line = 3;
-
-		const int num_strings_per_line[num_lines] = {3,2};
-
-		// Text is UTF-8, so you can use special characters, as long as your font supports them.
-		const char* const line_text[num_lines][max_strings_per_line] = {
-			{
-				"8 Point Text",
-				"12 Point Text",
-				"18 Point Text"
-			},
-			{
-				"24 Point Text",
-				"32 Point Text"
-			}
-		};
-
-		const int text_sizes[num_lines][max_strings_per_line] = {
-			{8,12,15},
-			{24,32}
-		};
-
-		setcolor (BLACK);
-		setlinestyle(DASHED);
-
-		for(int i = 0; i < num_lines; ++i) {
-			t_bound_box text_bbox = t_bound_box(t_point(100.,710. + i*60.), text_example_width/num_strings_per_line[i], 60.);
-			for(int j = 0; j < num_strings_per_line[i]; ++j) {
-				setfontsize (text_sizes[i][j]);
-				drawtext_in(text_bbox, line_text[i][j]);
-				drawrect(text_bbox);
-
-				text_bbox += t_point(text_example_width/num_strings_per_line[i],0);
-			}
-		}
 	}
 
 	/********
-	 * Draw some lines of various thickness
+	 * Draw wires 
 	 ********/
 	{
-		setfontsize (10);
-		
+    setcolor(BLACK);
 		setlinestyle (SOLID);
-		drawtext (200,900,"Thin line (width 1)", 200.0, FLT_MAX);
 		setlinewidth (1);
-		drawline (100,920,300,920);
-		drawtext (500,900,"Width 3 Line", 200.0, FLT_MAX);
-		setlinewidth (3);
-		drawline (400,920,600,920);
-		drawtext (800,900,"Width 6 Line", 200.0, FLT_MAX);
-		setlinewidth (6);
-		drawline (700,920,900,920);
+
+    line_start = t_point(120, 120);
+    line_end = t_poit(180, 120);
+
+    for(int i = 0; i < n; i++){
+      for(int j = 0; j < n; j++){
+        for(int k = 0; k < w; k++){
+          line_start += t_point(0, -15);
+          line_end += t_point(0, -15);
+          drawline (line_start, line_end);
+        }
+        line_start += t_point(rectangle_width*2, k*15);
+        line_end += t_point(rectangle_width*2+60, k*15);
+      }
+      line_start += t_point();
+    }
 	}
 
 	/********

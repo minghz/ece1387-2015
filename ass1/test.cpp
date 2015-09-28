@@ -2,6 +2,16 @@
 #include <cstdlib>
 
 
+using namespace std;
+
+class Track {
+  public:
+    int x; //x - coordinate
+    int y; //y - coordinate
+    int z; //vertical == 1, horizontal == 0
+    int wire; // 0 to W-1
+};
+
 int print_possible_conn(int x, int y, int z, int wire){
 
   int n, s, w, e;
@@ -39,21 +49,51 @@ int print_possible_conn(int x, int y, int z, int wire){
 
   return 0;
 }
+int print_connected_track(int lb_x, int lb_y, int lb_pin){
 
+  switch(lb_pin){
+
+    case 1: //south
+      printf("%d%d%d\n",
+              lb_x, lb_y, 0);
+      break;
+    case 2: //east
+      printf("%d%d%d\n",
+              lb_x+1, lb_y, 1);
+      break;
+    case 3: //north
+      printf("%d%d%d\n",
+              lb_x, lb_y+1, 0);
+      break;
+    case 4: //west
+      printf("%d%d%d\n",
+              lb_x, lb_y, 1);
+      break;
+
+    default:
+      printf("not valid pin number\n");
+
+  }
+
+  return 0;
+}
 
 int main(){
   
-  printf("test123\n----\n");
+  print_connected_track(1, 1, 4);
+  //int x = 4;
+  //int y = 2;
+  //int z = 1; //vertical = 1, horizontal = 0
+  //int wire = 0;
 
-  int x = 4;
-  int y = 2;
-  int z = 1; //vertical = 1, horizontal = 0
-  int wire = 0;
+  ////1->south, 2->east, 3->north, 4->west
 
-  //1->south, 2->east, 3->north, 4->west
+  //printf("printing possible connections for: %d%d%dw%d\n", x,y,z,wire);
+  //print_possible_conn(x, y, z, wire);
 
-  printf("printing possible connections for: %d%d%dw%d\n", x,y,z,wire);
-  print_possible_conn(x, y, z, wire);
+
+
+
 
   return 0;
 }
