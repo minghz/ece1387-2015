@@ -12,6 +12,7 @@ class Track {
     int wire; // 0 to W-1
 };
 
+
 int print_possible_conn(int x, int y, int z, int wire){
 
   int n, s, w, e;

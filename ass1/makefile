@@ -23,7 +23,7 @@ PLATFORM = X11
 #PLATFORM = WIN32
 #PLATFORM = NO_GRAPHICS
 
-HDR = graphics.h easygl_constants.h
+HDR = graphics.h easygl_constants.h lab.h
 SRC = graphics.cpp lab.cpp
 EXE = lab
 BACKUP_FILENAME=`date "+backup-%Y%m%d-%H%M.zip"`

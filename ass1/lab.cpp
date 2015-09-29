@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include "graphics.h"
+#include "lab.h"
 
 // Callbacks for event-driven window handling.
 void drawscreen (void);
@@ -36,10 +37,61 @@ const t_bound_box initial_coords = t_bound_box(0,0,1000,1000);
 // graphics coordinate system (ie. with inverted y; origin in top left)
 // const t_bound_box initial_coords = t_bound_box(0,1000,1000,0); 
 
+cct parse_circuit_file(string filename){
+
+  Circuit cct;
+
+  std::ifstream cctfile(filename);
+
+  int grid_size, tracks_per_channel, x1, y1, p1, x2, y2, p2; 
+
+  if(!(cctfile >> grid_size)) {
+    //error, could not read first line, abort!
+  } else {
+    std::cout << "grid size" << grid_size << "\n";
+    cct.grid_size = grid_size;
+  }
+  cctfile >> tracks_per_channel;
+  std::cout << "tracks_per_channel" << tracks_per_channel << "\n";
+  cct.tracks_per_channel = tracks_per_channel;
+
+  SourceSink * ptr = cct.source_sink_head;
+  while(ptr != NULL){
+    cctfile >> x1 >> y1 >> p1 >> x2 >> y2 >> p2
+    std::cout << x1 << y1 << p1 << x2 << y2 << p2 << "\n";
+
+    ptr->X1 = x1;
+    ptr->Y1 = y1;
+    ptr->P1 = p1;
+
+    ptr->X2 = x2;
+    ptr->Y2 = y2;
+    ptr->P2 = p2;
+
+    if(x1 == -1){
+      //end of file
+      ptr->next = null;
+    } else {
+      ptr->next = new SourceSink();
+      ptr = ptr->next;
+    }
+    
+  } //end while
+
+
+  cct.close();
+}
 
 int main() {
 
-	std::cout << "About to start graphics.\n";
+	std::cout << "Parse Specification File\n";
+  //external function here to parse the file and save into a local variable
+  Circuit cct;
+  cct = parse_circuit_file("cct1");
+
+
+
+
 
 	/**************** initialize display **********************/
 	
@@ -132,28 +184,24 @@ void drawscreen (void) {
 	setlinewidth (1);
 	setcolor (BLACK);
 	
+  const float rectangle_width = 60;
+  const float rectangle_height = rectangle_width;
+  const t_point start_point = t_point(120,120);
+  const int n = 4;
+  const int w = 4;
 	{
 		/**************
 		 * Draw logic blocks 
 		 **************/
 
-		const float rectangle_width = 60;
-		const float rectangle_height = rectangle_width;
-		const t_point start_point = t_point(120,120);
 		t_bound_box logic_block = t_bound_box(start_point, rectangle_width, rectangle_height);
-		
-    int n = 4;
-    int w = 4;
+
 		for(int i = 0; i < n; i++) {
-
       for(int j = 0; j < n; j++){
-
         setcolor(LIGHTGREY);
         fillrect(logic_block);
         logic_block += t_point(rectangle_width*2,0);
-
       }
-
       logic_block += t_point(-rectangle_width*n*2,rectangle_height*2);
     }
 
@@ -167,38 +215,49 @@ void drawscreen (void) {
 		setlinestyle (SOLID);
 		setlinewidth (1);
 
-    line_start = t_point(120, 120);
-    line_end = t_poit(180, 120);
+    int i=0;
+    int j=0;
+    int k=0;
 
-    for(int i = 0; i < n; i++){
-      for(int j = 0; j < n; j++){
-        for(int k = 0; k < w; k++){
-          line_start += t_point(0, -15);
-          line_end += t_point(0, -15);
+    t_point line_start = t_point(120, 120);
+    t_point line_end = t_point(120+60, 120);
+    //drawing horizontal tracks
+    for(i = 0; i < n+1; i++){
+      for(j = 0; j < n; j++){
+        for(k = 0; k < w; k++){
+          line_start += t_point(0, -12);
+          line_end += t_point(0, -12);
           drawline (line_start, line_end);
         }
-        line_start += t_point(rectangle_width*2, k*15);
-        line_end += t_point(rectangle_width*2+60, k*15);
+        line_start += t_point(rectangle_width*2, k*12.0f);
+        line_end += t_point(rectangle_width*2, k*12.0f);
       }
-      line_start += t_point();
+      line_start = t_point(120, rectangle_height*2*(i+2));
+      line_end = t_point(120+60, rectangle_height*2*(i+2));
     }
-	}
 
-	/********
-	 * Draw the rubber-band line, if it's there
-	 ********/
+    line_start = t_point(120, 120);
+    line_end = t_point(120, 120+60);
+    //drawing vertical tracks
+    for(i = 0; i < n+1; i++){
+      for(j = 0; j < n; j++){
+        for(k = 0; k < w; k++){
+          line_start += t_point(-12, 0);
+          line_end += t_point(-12, 0);
+          drawline (line_start, line_end);
+        }
+        line_start += t_point(k*12.0f, rectangle_height*2);
+        line_end += t_point(k*12.0f, rectangle_height*2);
+      }
+      line_start = t_point(rectangle_width*2*(i+2), 120);
+      line_end = t_point(rectangle_width*2*(i+2), 120+60);
+    }
 
-	setlinewidth (1);
-	setcolor (GREEN);
-	
-        for (unsigned int i = 1; i < line_pts.size(); i++) 
-		drawline (line_pts[i-1], line_pts[i]);
 
-	// Screen redraw will get rid of a rubber line.  
-	have_rubber_line = false;
+
+  }
+
 }
-
-
 void delay (long milliseconds) {
 	// if you would like to use this function in your
 	// own code you will need to #include <chrono> and
