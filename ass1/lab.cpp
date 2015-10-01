@@ -7,6 +7,16 @@
 #include "graphics.h"
 #include "lab.h"
 
+using namespace std;
+
+/* Constants
+ */
+Circuit cct; // constant cct file parsed only once
+Track *all_tracks = NULL; //array to house all tracks
+
+/* end Constants
+ */
+
 // Callbacks for event-driven window handling.
 void drawscreen (void);
 void act_on_new_button_func (void (*drawscreen_ptr) (void));
@@ -37,7 +47,7 @@ const t_bound_box initial_coords = t_bound_box(0,0,1000,1000);
 // graphics coordinate system (ie. with inverted y; origin in top left)
 // const t_bound_box initial_coords = t_bound_box(0,1000,1000,0); 
 
-cct parse_circuit_file(string filename){
+Circuit parse_circuit_file(string filename){
 
   Circuit cct;
 
@@ -48,17 +58,14 @@ cct parse_circuit_file(string filename){
   if(!(cctfile >> grid_size)) {
     //error, could not read first line, abort!
   } else {
-    std::cout << "grid size" << grid_size << "\n";
     cct.grid_size = grid_size;
   }
   cctfile >> tracks_per_channel;
-  std::cout << "tracks_per_channel" << tracks_per_channel << "\n";
   cct.tracks_per_channel = tracks_per_channel;
 
   SourceSink * ptr = cct.source_sink_head;
   while(ptr != NULL){
-    cctfile >> x1 >> y1 >> p1 >> x2 >> y2 >> p2
-    std::cout << x1 << y1 << p1 << x2 << y2 << p2 << "\n";
+    cctfile >> x1 >> y1 >> p1 >> x2 >> y2 >> p2;
 
     ptr->X1 = x1;
     ptr->Y1 = y1;
@@ -70,7 +77,8 @@ cct parse_circuit_file(string filename){
 
     if(x1 == -1){
       //end of file
-      ptr->next = null;
+      ptr->next = NULL;
+      ptr = NULL;
     } else {
       ptr->next = new SourceSink();
       ptr = ptr->next;
@@ -78,19 +86,110 @@ cct parse_circuit_file(string filename){
     
   } //end while
 
+  cctfile.close();
 
-  cct.close();
+  return cct;
+}
+
+void print_circuit(Circuit cct){
+
+  cout << "\n--- Reading cct file ---\n";
+
+  cout << cct.grid_size << endl;
+  cout << cct.tracks_per_channel << endl;
+
+  for(SourceSink * ptr = cct.source_sink_head; ptr != NULL; ptr = ptr->next){
+    cout << ptr->X1 << ptr->Y1 << ptr->P1 << ptr->X2 << ptr->Y2 << ptr->P2 << endl;
+  
+  }
+}
+
+int initialize_tracks(float rectangle_height, float rectangle_width, float wire_space){
+
+  t_point line_start;
+  t_point line_end;
+
+  int w = cct.tracks_per_channel;
+
+  int number_of_tracks = 2*cct.grid_size*(cct.grid_size + 1)*cct.tracks_per_channel;
+  all_tracks = new Track[number_of_tracks];
+
+  int track_index = 0;
+
+  for(int z = 0; z < 2; z++){ //0 - horizontal // 1 - vertical
+    //cout << endl;
+    if(z==0){
+      line_start = t_point(120, 120);
+      line_end = t_point(120+60, 120);
+    }else if (z==1){
+      line_start = t_point(120, 120);
+      line_end = t_point(120, 120+60);
+    }
+    for(int i = 0; i < cct.grid_size + 1; i++){
+      for(int j = 0; j < cct.grid_size; j++){
+        for(int w = 0; w < cct.tracks_per_channel; w++){
+          if(z == 0){
+            all_tracks[track_index].x = j;
+            all_tracks[track_index].y = i;
+            all_tracks[track_index].z = z;
+            all_tracks[track_index].wire = w;
+
+            line_start += t_point(0, -wire_space);
+            line_end += t_point(0, -wire_space);
+            drawline (line_start, line_end);
+ 
+            all_tracks[track_index].s_pt = line_start;
+            all_tracks[track_index].e_pt = line_end;
+       
+            //cout << j << i << z << endl;
+            
+          } else if (z == 1 ){
+            all_tracks[track_index].x = i;
+            all_tracks[track_index].y = j;
+            all_tracks[track_index].z = z;
+            all_tracks[track_index].wire = w;
+
+            line_start += t_point(-wire_space, 0);
+            line_end += t_point(-wire_space, 0);
+            drawline (line_start, line_end);
+            
+            all_tracks[track_index].s_pt = line_start;
+            all_tracks[track_index].e_pt = line_end;
+
+            //cout << i << j << z << endl;
+          } else {
+            //nothing
+          }
+          track_index += 1;
+        }
+        if(z==0){
+          line_start += t_point(rectangle_width*2, w*wire_space);
+          line_end += t_point(rectangle_width*2, w*wire_space);
+        }else if (z==1){
+          line_start += t_point(w*wire_space, rectangle_height*2);
+          line_end += t_point(w*wire_space, rectangle_height*2);            
+        }
+      }
+      if(z==0){
+        line_start = t_point(120, rectangle_height*2*(i+2)+wire_space/2);
+        line_end = t_point(120+60, rectangle_height*2*(i+2)+wire_space/2);
+      }else if(z==1){
+        line_start = t_point(rectangle_width*2*(i+2)+wire_space/2, 120);
+        line_end = t_point(rectangle_width*2*(i+2)+wire_space/2, 120+60);        
+      }
+    }
+  }//end of loops
+  //cout << track_index << endl;
+  return track_index; //size of array
+
 }
 
 int main() {
 
-	std::cout << "Parse Specification File\n";
-  //external function here to parse the file and save into a local variable
-  Circuit cct;
-  cct = parse_circuit_file("cct1");
+	std::cout << "Parsing cct File\n";
+  cct = parse_circuit_file("cct4");
 
-
-
+  //print_circuit(cct);
 
 
 	/**************** initialize display **********************/
@@ -183,12 +282,17 @@ void drawscreen (void) {
 	setlinestyle (SOLID);
 	setlinewidth (1);
 	setcolor (BLACK);
-	
+
+  int n = cct.grid_size;
+  int w = cct.tracks_per_channel;
+
   const float rectangle_width = 60;
   const float rectangle_height = rectangle_width;
+  const float wire_space = rectangle_width/w;
   const t_point start_point = t_point(120,120);
-  const int n = 4;
-  const int w = 4;
+
+
+
 	{
 		/**************
 		 * Draw logic blocks 
@@ -215,49 +319,25 @@ void drawscreen (void) {
 		setlinestyle (SOLID);
 		setlinewidth (1);
 
-    int i=0;
-    int j=0;
-    int k=0;
+    int number_of_tracks = 0;
+    number_of_tracks = initialize_tracks(rectangle_width, rectangle_height, wire_space);
 
-    t_point line_start = t_point(120, 120);
-    t_point line_end = t_point(120+60, 120);
-    //drawing horizontal tracks
-    for(i = 0; i < n+1; i++){
-      for(j = 0; j < n; j++){
-        for(k = 0; k < w; k++){
-          line_start += t_point(0, -12);
-          line_end += t_point(0, -12);
-          drawline (line_start, line_end);
-        }
-        line_start += t_point(rectangle_width*2, k*12.0f);
-        line_end += t_point(rectangle_width*2, k*12.0f);
-      }
-      line_start = t_point(120, rectangle_height*2*(i+2));
-      line_end = t_point(120+60, rectangle_height*2*(i+2));
+    //TODO: implement return track channel given logic block coord and pin number
+    //TODO: implement expansion list architecture
+    // -> look into c standard library linked list with easy pop and push
+    //TODO: implement event callbacks for click actions - step by step debug
+
+    //color all tracks green
+    setcolor(GREEN);
+    for(int i = 0; i < number_of_tracks; i++){
+      drawline(all_tracks[i].s_pt, all_tracks[i].e_pt);
     }
-
-    line_start = t_point(120, 120);
-    line_end = t_point(120, 120+60);
-    //drawing vertical tracks
-    for(i = 0; i < n+1; i++){
-      for(j = 0; j < n; j++){
-        for(k = 0; k < w; k++){
-          line_start += t_point(-12, 0);
-          line_end += t_point(-12, 0);
-          drawline (line_start, line_end);
-        }
-        line_start += t_point(k*12.0f, rectangle_height*2);
-        line_end += t_point(k*12.0f, rectangle_height*2);
-      }
-      line_start = t_point(rectangle_width*2*(i+2), 120);
-      line_end = t_point(rectangle_width*2*(i+2), 120+60);
-    }
-
 
 
   }
 
 }
+
 void delay (long milliseconds) {
 	// if you would like to use this function in your
 	// own code you will need to #include <chrono> and
