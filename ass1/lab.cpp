@@ -4,6 +4,7 @@
 #include <thread>
 #include <cstdlib>
 #include <vector>
+#include <list>
 #include "graphics.h"
 #include "lab.h"
 
@@ -13,6 +14,7 @@ using namespace std;
  */
 Circuit cct; // constant cct file parsed only once
 Track *all_tracks = NULL; //array to house all tracks
+list<Track*> expansion_list;
 
 /* end Constants
  */
@@ -63,27 +65,28 @@ Circuit parse_circuit_file(string filename){
   cctfile >> tracks_per_channel;
   cct.tracks_per_channel = tracks_per_channel;
 
-  SourceSink * ptr = cct.source_sink_head;
-  while(ptr != NULL){
+  SourceSink ** ptr = &cct.source_sink_head;
+  while((*ptr) != NULL){
     cctfile >> x1 >> y1 >> p1 >> x2 >> y2 >> p2;
-
-    ptr->X1 = x1;
-    ptr->Y1 = y1;
-    ptr->P1 = p1;
-
-    ptr->X2 = x2;
-    ptr->Y2 = y2;
-    ptr->P2 = p2;
 
     if(x1 == -1){
       //end of file
-      ptr->next = NULL;
-      ptr = NULL;
+      *ptr = NULL;
     } else {
-      ptr->next = new SourceSink();
-      ptr = ptr->next;
+
+      (*ptr)->X1 = x1;
+      (*ptr)->Y1 = y1;
+      (*ptr)->P1 = p1;
+
+      (*ptr)->X2 = x2;
+      (*ptr)->Y2 = y2;
+      (*ptr)->P2 = p2;
+
+      (*ptr)->next = new SourceSink();
+      ptr = &(*ptr)->next;
+
     }
-    
+   
   } //end while
 
   cctfile.close();
@@ -184,13 +187,64 @@ int initialize_tracks(float rectangle_height, float rectangle_width, float wire_
 
 }
 
+Track * get_connected_track(int lb_x, int lb_y, int lb_p, int wire, int number_of_tracks){
+  
+  int x;
+  int y;
+  int z;
+
+   switch(lb_p){
+     case 1: //south
+       x = lb_x;
+       y = lb_y;
+       z = 0;
+
+       break;
+     case 2: //east
+       x = lb_x+1;
+       y = lb_y;
+       z = 1;
+
+       break;
+     case 3: //north
+       x = lb_x;
+       y = lb_y+1;
+       z = 0;
+
+       break;
+     case 4: //west
+       x = lb_x;
+       y = lb_y;
+       z = 1;
+
+       break;
+     default:
+       printf("Error: not valid pin number\n");
+  }
+  
+   Track * track = NULL;
+   for(int i = 0 ; i < number_of_tracks; i++){
+     if(all_tracks[i].x == x &&
+         all_tracks[i].y == y &&
+         all_tracks[i].z == z &&
+         all_tracks[i].wire == wire){
+       //found our track
+       track = &all_tracks[i];
+     }
+   }
+
+   if(track == NULL){cout << "ERROR! No tracks connected to this block on this pin\n" << endl;}
+
+   return track;  
+}
+
+
 int main() {
 
 	std::cout << "Parsing cct File\n";
-  cct = parse_circuit_file("cct4");
+  cct = parse_circuit_file("cct0");
 
   //print_circuit(cct);
-
 
 	/**************** initialize display **********************/
 	
@@ -323,23 +377,56 @@ void drawscreen (void) {
     number_of_tracks = initialize_tracks(rectangle_width, rectangle_height, wire_space);
 
     //TODO: implement return track channel given logic block coord and pin number
-    //TODO: implement expansion list architecture
-    // -> look into c standard library linked list with easy pop and push
+    for(SourceSink * ptr = cct.source_sink_head; ptr != NULL; ptr = ptr->next){
+      for(int i = 0; i < w; i++){ //find track of wire 0 
+
+        // mark sources
+        Track * t_source = get_connected_track(ptr->X1, ptr->Y1, ptr->P1, i, number_of_tracks);
+        t_source->is_labeled = true;
+        expansion_list.push_back(t_source);
+        
+        // mark targets
+        Track * t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i, number_of_tracks);
+        t_sink->is_target = true;
+
+        //printing out stuff
+        cout << endl;
+        cout << ptr->X1 << ptr->Y1 << ptr->P1 << endl;
+        cout << t_source->x << t_source->y << t_source->z << " wire:" << t_source->wire << endl;
+        cout << ptr->X2 << ptr->Y2 << ptr->P2 << endl;
+        cout << t_sink->x << t_sink->y << t_sink->z << " wire:" << t_sink->wire << endl;
+        
+        
+      }
+    }//end for loops
+
+    cout << "expansion list total: " << expansion_list.size() << endl;
+
+    while(!expansion_list.empty()){
+      expansion_list.front();
+
+      expansion_list.pop_front();
+    
+    }
+
+    if(expansion_list.empty()){ cout <<"empy"<<endl;}
+
+
+    
     //TODO: implement event callbacks for click actions - step by step debug
 
     //color all tracks green
-    setcolor(GREEN);
-    for(int i = 0; i < number_of_tracks; i++){
-      drawline(all_tracks[i].s_pt, all_tracks[i].e_pt);
-    }
+   // setcolor(GREEN);
+   // for(int i = 0; i < number_of_tracks; i++){
+   //   drawline(all_tracks[i].s_pt, all_tracks[i].e_pt);
+   // }
 
 
   }
 
 }
-
 void delay (long milliseconds) {
-	// if you would like to use this function in your
+	//if you would like to use this function in your
 	// own code you will need to #include <chrono> and
 	// <thread>
 	std::chrono::milliseconds duration(milliseconds);
