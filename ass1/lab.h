@@ -17,7 +17,7 @@ class Track {
     int lb_y; // logic block y coord
     int lb_p; // logic block pin number
     
-    int label; //== cost
+    int label = -1; //== cost
     bool is_labeled = false;
     bool is_unavailable = false;
     bool is_target = false;
@@ -39,11 +39,23 @@ class Track {
     friend bool operator== (Track &t1, Track &t2);
 
 };
+
 bool operator== (Track &t1, Track &t2){
   return (t1.x == t2.x &&
           t1.y == t2.y &&
           t1.z == t2.z &&
           t1.wire == t2.wire);
+}
+std::ostream& operator<< (std::ostream & out, Track const& data) {
+    out << "x: " << data.x << " | " ;
+    out << "y: " << data.y << " | " ;
+    out << "z: " << data.z << " | " ;
+    out << "wire: " << data.wire << " | " ;
+    out << "label: " << data.label << " | " ;
+    out << "is_labeled: " << data.is_labeled << " | " ;
+    out << "is_unavailable: " << data.is_unavailable << " | " ;
+    out << "is_target: " << data.is_target;
+    return out ;
 }
 
 class ChannelCoord{
