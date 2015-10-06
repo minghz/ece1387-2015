@@ -54,7 +54,9 @@ std::ostream& operator<< (std::ostream & out, Track const& data) {
     out << "label: " << data.label << " | " ;
     out << "is_labeled: " << data.is_labeled << " | " ;
     out << "is_unavailable: " << data.is_unavailable << " | " ;
-    out << "is_target: " << data.is_target;
+    out << "is_target: " << data.is_target << " | ";
+    out << "s_pt: (" << data.s_pt.x << ", " << data.s_pt.y << ")"; //start point to draw
+    out << " | e_pt: (" << data.e_pt.x << ", " << data.e_pt.y << ")"; //start point to draw
     return out ;
 }
 

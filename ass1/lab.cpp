@@ -18,6 +18,15 @@ list<Track*> expansion_list;
 list< list<Track*>> routes_list;
 int number_of_tracks = 0;
 bool debug_mode = false;
+float total_routes = 0;
+float routes_not_found = 0;
+
+//drawing my grid
+float rectangle_width = 80;
+float rectangle_height = rectangle_width;
+float wire_length = rectangle_width;
+float wire_space = 0.0f;
+t_point start_point = t_point(160,160);
 
 /* end Constants
  */
@@ -25,6 +34,9 @@ bool debug_mode = false;
 // Callbacks for event-driven window handling.
 void drawscreen (void);
 void act_on_new_button_func (void (*drawscreen_ptr) (void));
+void route_all_button_func (void (*drawscreen_ptr) (void));
+void expand_button_func(void (*drawscreen_ptr) (void));
+void traceback_button_func(void (*drawscreen_ptr) (void));
 void act_on_button_press (float x, float y, t_event_buttonPressed event);
 void act_on_mouse_move (float x, float y);
 void act_on_key_press (char c);
@@ -135,15 +147,15 @@ int initialize_tracks(float rectangle_height, float rectangle_width, float wire_
   for(int z = 0; z < 2; z++){ //0 - horizontal // 1 - vertical
     //cout << endl;
     if(z==0){
-      line_start = t_point(120, 120);
-      line_end = t_point(120+60, 120);
+      line_start = start_point;
+      line_end = start_point + t_point(wire_length, 0);
     }else if (z==1){
-      line_start = t_point(120, 120);
-      line_end = t_point(120, 120+60);
+      line_start = start_point;
+      line_end = start_point + t_point(0, wire_length);
     }
     for(int i = 0; i < cct.grid_size + 1; i++){
       for(int j = 0; j < cct.grid_size; j++){
-        for(int w = 0; w < cct.tracks_per_channel; w++){
+        for(int w = cct.tracks_per_channel-1; w >= 0; w--){
           if(z == 0){
             all_tracks[track_index].x = j;
             all_tracks[track_index].y = i;
@@ -187,11 +199,11 @@ int initialize_tracks(float rectangle_height, float rectangle_width, float wire_
         }
       }
       if(z==0){
-        line_start = t_point(120, rectangle_height*2*(i+2)+wire_space/2);
-        line_end = t_point(120+60, rectangle_height*2*(i+2)+wire_space/2);
+        line_start = t_point(start_point.x, rectangle_height*2*(i+2)+wire_space/2);
+        line_end = t_point(start_point.x+wire_length, rectangle_height*2*(i+2)+wire_space/2);
       }else if(z==1){
-        line_start = t_point(rectangle_width*2*(i+2)+wire_space/2, 120);
-        line_end = t_point(rectangle_width*2*(i+2)+wire_space/2, 120+60);        
+        line_start = t_point(rectangle_width*2*(i+2)+wire_space/2, start_point.y);
+        line_end = t_point(rectangle_width*2*(i+2)+wire_space/2, start_point.y+wire_length);        
       }
     }
   }//end of loops
@@ -326,12 +338,18 @@ Track * get_connected_track(Track * origin_track){
   return connected_track;
 }
 
+
+void expand_one(void){
+}
+
 /* expands to find target
  * returns target track if found
  */
 Track * expand(){
 
   int label = 0;
+  setfontsize(10);
+  setcolor (RED);
 
   Track * focus_track = NULL;
     while(!expansion_list.empty()){
@@ -349,17 +367,18 @@ Track * expand(){
 
       for(Track * connected_track = get_connected_track(focus_track); 
           connected_track != NULL;
-          connected_track = get_connected_track(focus_track)) {
+          connected_track = get_connected_track(focus_track)) { 
 
           if(connected_track->is_target){ //is target or not?
             connected_track->label = label;
             connected_track->is_labeled = true;
+            if(debug_mode) drawtext(connected_track->s_pt, to_string(label), FLT_MAX, FLT_MAX);
             return connected_track; //return target if found
           } else {
             connected_track->is_labeled = true;
             connected_track->label = label;
+            if(debug_mode) drawtext(connected_track->s_pt, to_string(label), FLT_MAX, FLT_MAX);
             expansion_list.push_back(connected_track);
-
 
           }
       }
@@ -420,6 +439,80 @@ Track * traceback_route(Track * target){
   
 }
 
+void draw_traceback_routes(void){
+
+  cout << "drawing tracebacks" <<endl;
+  //color go through traced back routes
+  setcolor(GREEN);
+
+  for(list<list <Track *>>::iterator it = routes_list.begin();
+      it != routes_list.end();
+      ++it){
+      t_point tmp_s = t_point(0,0);
+      t_point tmp_e = t_point(0,0);
+      int tmp_or = 0;
+
+    for(list<Track*>::iterator itt = (*it).begin();
+        itt != (*it).end();
+        ++itt){
+
+        t_point s = (*itt)->s_pt;
+        t_point e = (*itt)->e_pt;
+        int ori = (*itt)->z;
+
+        if(tmp_s.x == 0){
+          //first iteration, skip
+        } else {
+          
+          if(ori == 0){ //horizontal
+            if(s.x > tmp_s.x){ //to left
+              if(tmp_e.y == tmp_s.y){ //hor
+                drawline(s, tmp_e);
+              } else if(tmp_s.y > s.y) { //up
+                drawline(s, tmp_s);
+              } else if(tmp_e.y < s.y){ //down
+                drawline(s, tmp_e);
+              }
+            } else if (e.x < tmp_s.x){ //to right
+              if(tmp_s.y == tmp_e.y){ //hor
+                drawline(e, tmp_s);
+              } else if (e.y < tmp_s.y) { //above
+                drawline(e, tmp_s);
+              } else if (e.y > tmp_e.y) { //below
+                drawline(e, tmp_e);
+              }
+            }
+          } else if (ori == 1) { //vertical
+            if(e.y < tmp_s.y) { //above
+              if(tmp_s.x == tmp_e.x){ //vertical
+                drawline(e, tmp_s);
+              } else if (tmp_s.x > e.x){ //right
+                drawline(e, tmp_s);
+              } else if (tmp_s.x < e.x){ //left
+                drawline(e, tmp_e);
+              }
+            } else if (s.y > tmp_s.y){ //below
+              if (tmp_s.x == tmp_e.x) {
+                drawline(tmp_e, s);
+              } else if (tmp_s.x > s.x){ //right
+                drawline(s, tmp_s);
+              } else if (tmp_e.x < s.x) { //left
+                drawline(tmp_e, s);
+              }
+            }
+          }
+        
+        }// end else
+
+        drawline(s, e);
+        tmp_s = s;
+        tmp_e = e;
+        tmp_or = ori;
+
+    }
+  }
+}
+
 int main(int argc, char* argv[]) {
 
   if(argv[1] == NULL){
@@ -448,21 +541,13 @@ int main(int argc, char* argv[]) {
 	// Set the message at the bottom (also UTF-8)
 	update_message("Assignment 1 - 2015");
 
-	// Pass control to the window handling routine.  It will watch for user input
-	// and redraw the screen / pan / zoom / etc. the graphics in response to user
-	// input or windows being moved around the screen.  We have to pass in 
-        // at least one callback -- the one to redraw the graphics.
-        // Three other callbacks can be provided to handle mouse button presses,
-        // mouse movement and keyboard button presses in the graphics area, 
-        // respectively. Those 3 callbacks are optional, so we can pass NULL if
-        // we don't need to take any action on those events, and we do that
-        // below.
-        // This function will return if and when
-	// the user presses the proceed button.
-
-	create_button ("Window", "Next", act_on_new_button_func); // name is UTF-8
+	create_button ("Window", "Expand 0", expand_button_func); // name is UTF-8
+	create_button ("Window", "Next Step 0", act_on_new_button_func); // name is UTF-8
+	create_button ("Window", "Traceback Routes", traceback_button_func); // name is UTF-8
+	create_button ("Window", "Route All", route_all_button_func); // name is UTF-8
 
 	event_loop(NULL, NULL, NULL, drawscreen);   
+
 	t_bound_box old_coords = get_visible_world(); // save the current view for later;
 
 
@@ -491,12 +576,7 @@ void drawscreen (void) {
   int n = cct.grid_size;
   int w = cct.tracks_per_channel;
 
-  const float rectangle_width = 60;
-  const float rectangle_height = rectangle_width;
-  const float wire_space = rectangle_width/w;
-  const t_point start_point = t_point(120,120);
-
-
+  wire_space = rectangle_width/w;
 
 	{
 		/**************
@@ -526,136 +606,14 @@ void drawscreen (void) {
 
     number_of_tracks = initialize_tracks(rectangle_width, rectangle_height, wire_space);
 
-    // Mark source tracks and put into expansion list
-    // Mark target tracks
-    for(SourceSink * ptr = cct.source_sink_head; ptr != NULL; ptr = ptr->next){
-      Track * t_source = NULL;
-      Track * t_sink = NULL;
- 
-      //print out which route is being processed
-      cout << "Processing route: " << 
-        ptr->X1 << ptr->Y1 << ptr->P1 << " " <<
-        ptr->X2 << ptr->Y2 << ptr->P2 << endl;
-            
-
-      for(int i = 0; i < w; i++){ //find track of wire 0 
-
-        // mark sources
-        t_source = get_connected_track(ptr->X1, ptr->Y1, ptr->P1, i);
-        t_source->is_labeled = true;
-        t_source->label = 0;
-        expansion_list.push_back(t_source);
-        if(debug_mode) cout << "Source ===== " << *t_source <<  endl;
-          
-        // mark targets
-        t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
-        t_sink->is_target = true;
-        if(debug_mode) cout << "Sink ======= " << *t_sink << endl;
-
-
-      }// end for marking source and targets
-
-
-      // expand -> returns target if found
-      Track * found_target = expand();
-
-      if(found_target != NULL) {
-        if(debug_mode) cout << "found target! " << *found_target <<endl;
-        //traceback to source
-        //traceback
-        list<Track*> route;
-        Track * trace = found_target;
-
-        route.push_front(trace);    
-        while(trace->label > 0){ //if its 0, we don't want to trace anymore
-          trace = traceback_route(trace);
-          route.push_front(trace);
-        }
-
-        //add traced back route into list
-        routes_list.push_back(route);
-
-
-        //lets iterate through them?
-        if(debug_mode) {
-          cout << "\n" ;
-          for(list<Track *>::iterator it = route.begin();
-              it != route.end();
-              ++it) {
-            /* std::cout << *it; ... */
-            cout << "traceback -->> "<< **it << endl;
-          }
-        }
-
-
-      } else {
-        cout << "found target NOT" << endl;
-      }
-
-      expansion_list.clear(); // we already found the target. clear it up
-      //clear up targets
-      for(int i = 0; i < w; i++){
-        t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
-        t_sink->is_target=false;
-        if(debug_mode) cout << "clear targets --> " << *t_sink << endl;
-
-      }
-      //gotta clear all labels
-      clear_labels();
-      
-    }//end for each source/sink
-
     if(expansion_list.empty()){ cout <<"empy"<<endl;}
 
     
     //TODO: implement event callbacks for click actions - step by step debug
+    
+    //always color in traceback if exists
+    draw_traceback_routes();
 
-    //color go through traced back routes
-    // I'm not even sure if the traceback is right... damn
-    setcolor(GREEN);
-    for(list<list <Track *>>::iterator it = routes_list.begin();
-        it != routes_list.end();
-        ++it){
-        t_point tmp_s = t_point(0,0);
-        t_point tmp_e = t_point(0,0);
-      for(list<Track*>::iterator itt = (*it).begin();
-          itt != (*it).end();
-          ++itt){
-
-          t_point s = (*itt)->s_pt;
-          t_point e = (*itt)->e_pt;
-          int orientation = (*itt)->z;
-
-          drawline(s, e);
-          if(tmp_s.x == 0){
-          }else{
-            if(orientation == 0){ //horizontal line
-              if(e.x < tmp_s.x){
-                drawline(e, tmp_s);
-              } else if(s.x > tmp_e.x) {
-                drawline(e, tmp_s);
-              } else {
-                if(debug_mode) cout << "drawing is wrong fuck" <<endl;
-              }
-            } else if (orientation == 1){
-              if(s.y > tmp_e.y){ //south to north
-                if(tmp_e.y == tmp_s.y){//vertical
-                  drawline(s, tmp_e);
-                }else if(s.x < tmp_s.x){//south east
-                  drawline(s, tmp_s);
-                }else if(s.x > tmp_e.x){//south west
-                  drawline(s, tmp_e);
-                }
-              }else if (e.y < tmp_s.y){//north to south
-                drawline(e, tmp_s);
-              }
-            }
-          }
-
-          tmp_s = s;
-          tmp_e = e;
-      }
-    }
     //color all tracks green
    // setcolor(GREEN);
    // for(int i = 0; i < number_of_tracks; i++){
@@ -678,19 +636,127 @@ void delay (long milliseconds) {
 void act_on_new_button_func (void (*drawscreen_ptr) (void)) {
 
 	char old_button_name[200], new_button_name[200];
-	std::cout << "You pressed the new button!\n";
-	setcolor (MAGENTA);
-	setfontsize (12);
-	drawtext (500, 500, "You pressed the new button!", 10000.0, FLT_MAX);
-	sprintf (old_button_name, "%d Clicks", num_new_button_clicks);
+	std::cout << "Next Pressed\n";
+	sprintf (old_button_name, "Next %d", num_new_button_clicks);
 	num_new_button_clicks++;
-	sprintf (new_button_name, "%d Clicks", num_new_button_clicks);
+	sprintf (new_button_name, "Next %d", num_new_button_clicks);
 	change_button_text (old_button_name, new_button_name);
 
         // Re-draw the screen (a few squares are changing colour with time)
         drawscreen_ptr ();  
 }
 
+void expand_button_func(void (*drawscreen_ptr) (void)){
+
+
+}
+
+
+void route_all_button_func(void (*drawscreen_ptr) (void)) {
+
+  routes_not_found = 0;
+
+  int n = cct.grid_size;
+  int w = cct.tracks_per_channel;
+
+  // Mark source tracks and put into expansion list
+  // Mark target tracks
+  for(SourceSink * ptr = cct.source_sink_head; ptr != NULL; ptr = ptr->next){
+
+    total_routes ++;
+
+    Track * t_source = NULL;
+    Track * t_sink = NULL;
+
+    //print out which route is being processed
+    cout << "Processing route: " << 
+      ptr->X1 << ptr->Y1 << ptr->P1 << " " <<
+      ptr->X2 << ptr->Y2 << ptr->P2 << endl;
+
+    for(int i = 0; i < w; i++){ //find track of wire 0 
+
+      // mark sources
+      t_source = get_connected_track(ptr->X1, ptr->Y1, ptr->P1, i);
+      t_source->is_labeled = true;
+      t_source->label = 0;
+      expansion_list.push_back(t_source);
+      if(debug_mode) cout << "Source ===== " << *t_source <<  endl;
+        
+      // mark targets
+      t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
+      t_sink->is_target = true;
+      if(debug_mode) cout << "Sink ======= " << *t_sink << endl;
+
+    }// end for marking source and targets
+
+
+    // expand -> returns target if found
+    Track * found_target = expand();
+
+    if(found_target != NULL) {// target found!
+      if(debug_mode) cout << "found target! " << *found_target <<endl;
+      //traceback to source
+      //traceback
+      list<Track*> route;
+      Track * trace = found_target;
+
+      route.push_front(trace);    
+      trace->is_unavailable = true;
+      while(trace->label > 0){ //if its 0, we don't want to trace anymore
+        trace = traceback_route(trace);
+        trace->is_unavailable = true;
+        route.push_front(trace);
+      }
+
+      //add traced back route into list
+      routes_list.push_back(route); 
+
+
+      //lets iterate through them?
+      if(debug_mode) {
+        cout << "\n" ;
+        for(list<Track *>::iterator it = route.begin();
+            it != route.end();
+            ++it) {
+          /* std::cout << *it; ... */
+          cout << "traceback -->> "<< **it << endl;
+        }
+      }
+
+
+    } else {
+      cout << "found target NOT" << endl;
+      routes_not_found ++;
+    }
+
+    expansion_list.clear(); // we already found the target. clear it up
+    //clear up targets
+    for(int i = 0; i < w; i++){
+      t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
+      t_sink->is_target=false;
+      if(debug_mode) cout << "clear targets --> " << *t_sink << endl;
+
+    }
+    //gotta clear all labels
+    clear_labels();
+    
+  }//end for each source/sink
+
+  cout << "Finished Processing "<< total_routes <<" Routes" << endl;
+  if(routes_not_found > 0) {
+    cout << routes_not_found << " routes were not found!" << endl;
+  }
+  cout << "Percentage Routed: " 
+       << (total_routes - routes_not_found) / total_routes * 100 
+       << "%" << endl;
+
+}
+
+
+
+void traceback_button_func(void (*drawscreen_ptr) (void) ){
+  draw_traceback_routes();
+}
 
 void act_on_button_press (float x, float y, t_event_buttonPressed event) {
 
