@@ -1,0 +1,146 @@
+Running Uni-directional case
+Parsing cct Filecct0
+drawing tracebacks
+drawing tracebacks
+Processing route: 111 324
+Source ===== x: 1|y: 1|z: 0|wire: 0|label: 0|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 1|lb_p2: 0|s_pt:(320, 260) | e_pt:(400, 260)
+Sink ======= x: 3|y: 2|z: 1|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 1|lb_p: 4|lb_p2: 0|s_pt:(580, 480) | e_pt:(580, 560)
+Source ===== x: 1|y: 1|z: 0|wire: 1|label: 0|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 1|lb_p2: 0|s_pt:(320, 300) | e_pt:(400, 300)
+Sink ======= x: 3|y: 2|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 1|lb_p: 4|lb_p2: 0|s_pt:(620, 480) | e_pt:(620, 560)
+expansion list total: 2
+focus_track: x: 1|y: 1|z: 0|wire: 0|label: 0|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 1|lb_p2: 0|s_pt:(320, 260) | e_pt:(400, 260)
+expansion list total: 4
+focus_track: x: 1|y: 1|z: 0|wire: 1|label: 0|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 1|lb_p2: 0|s_pt:(320, 300) | e_pt:(400, 300)
+HORIZONTAL ODD WIRE
+get_track args: 101 w0
+Track found: x: 1|y: 0|z: 1|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 160) | e_pt:(260, 240)
+HORIZONTAL ODD WIRE
+get_track args: 101 w0
+Track found: x: 1|y: 0|z: 1|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 160) | e_pt:(260, 240)
+get_track args: 010 w1
+Track found: x: 0|y: 1|z: 0|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 300) | e_pt:(240, 300)
+HORIZONTAL ODD WIRE
+get_track args: 101 w0
+Track found: x: 1|y: 0|z: 1|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 160) | e_pt:(260, 240)
+get_track args: 010 w1
+Track found: x: 0|y: 1|z: 0|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 300) | e_pt:(240, 300)
+get_track args: 111 w1
+Track found: x: 1|y: 1|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 320) | e_pt:(300, 400)
+HORIZONTAL ODD WIRE
+get_track args: 101 w0
+Track found: x: 1|y: 0|z: 1|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 160) | e_pt:(260, 240)
+get_track args: 010 w1
+Track found: x: 0|y: 1|z: 0|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 300) | e_pt:(240, 300)
+get_track args: 111 w1
+Track found: x: 1|y: 1|z: 1|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 320) | e_pt:(300, 400)
+expansion list total: 6
+focus_track: x: 2|y: 1|z: 1|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 320) | e_pt:(460, 400)
+VERTICAL ODD WIRE
+get_track args: 120 w1
+Track found: x: 1|y: 2|z: 0|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 460) | e_pt:(400, 460)
+VERTICAL ODD WIRE
+get_track args: 120 w1
+Track found: x: 1|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 460) | e_pt:(400, 460)
+get_track args: 221 w1
+Track found: x: 2|y: 2|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 480) | e_pt:(460, 560)
+VERTICAL ODD WIRE
+get_track args: 120 w1
+Track found: x: 1|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 460) | e_pt:(400, 460)
+get_track args: 221 w1
+Track found: x: 2|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 480) | e_pt:(460, 560)
+get_track args: 220 w0
+Track found: x: 2|y: 2|z: 0|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 420) | e_pt:(560, 420)
+VERTICAL ODD WIRE
+get_track args: 120 w1
+Track found: x: 1|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 460) | e_pt:(400, 460)
+get_track args: 221 w1
+Track found: x: 2|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 480) | e_pt:(460, 560)
+get_track args: 220 w0
+Track found: x: 2|y: 2|z: 0|wire: 0|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 420) | e_pt:(560, 420)
+expansion list total: 8
+focus_track: x: 2|y: 1|z: 0|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 260) | e_pt:(560, 260)
+expansion list total: 10
+focus_track: x: 2|y: 0|z: 1|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(420, 160) | e_pt:(420, 240)
+expansion list total: 11
+focus_track: x: 1|y: 0|z: 1|wire: 0|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 160) | e_pt:(260, 240)
+expansion list total: 12
+focus_track: x: 0|y: 1|z: 0|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 300) | e_pt:(240, 300)
+HORIZONTAL ODD WIRE
+get_track args: 001 w0
+Track found: x: 0|y: 0|z: 1|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(80, 160) | e_pt:(80, 240)
+HORIZONTAL ODD WIRE
+get_track args: 001 w0
+Track found: x: 0|y: 0|z: 1|wire: 0|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(80, 160) | e_pt:(80, 240)
+get_track args: -110 w1
+get_track args: 011 w1
+Track found: x: 0|y: 1|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(120, 320) | e_pt:(120, 400)
+HORIZONTAL ODD WIRE
+get_track args: 001 w0
+Track found: x: 0|y: 0|z: 1|wire: 0|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(80, 160) | e_pt:(80, 240)
+get_track args: -110 w1
+get_track args: 011 w1
+Track found: x: 0|y: 1|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(120, 320) | e_pt:(120, 400)
+expansion list total: 13
+focus_track: x: 1|y: 1|z: 1|wire: 1|label: 1|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 320) | e_pt:(300, 400)
+VERTICAL ODD WIRE
+get_track args: 020 w1
+Track found: x: 0|y: 2|z: 0|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 460) | e_pt:(240, 460)
+VERTICAL ODD WIRE
+get_track args: 020 w1
+Track found: x: 0|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 460) | e_pt:(240, 460)
+get_track args: 121 w1
+Track found: x: 1|y: 2|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 480) | e_pt:(300, 560)
+VERTICAL ODD WIRE
+get_track args: 020 w1
+Track found: x: 0|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 460) | e_pt:(240, 460)
+get_track args: 121 w1
+Track found: x: 1|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 480) | e_pt:(300, 560)
+get_track args: 120 w0
+Track found: x: 1|y: 2|z: 0|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 420) | e_pt:(400, 420)
+VERTICAL ODD WIRE
+get_track args: 020 w1
+Track found: x: 0|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 460) | e_pt:(240, 460)
+get_track args: 121 w1
+Track found: x: 1|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 480) | e_pt:(300, 560)
+get_track args: 120 w0
+Track found: x: 1|y: 2|z: 0|wire: 0|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 420) | e_pt:(400, 420)
+expansion list total: 15
+focus_track: x: 1|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 460) | e_pt:(400, 460)
+HORIZONTAL ODD WIRE
+get_track args: 111 w0
+Track found: x: 1|y: 1|z: 1|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 320) | e_pt:(260, 400)
+HORIZONTAL ODD WIRE
+get_track args: 111 w0
+Track found: x: 1|y: 1|z: 1|wire: 0|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(260, 320) | e_pt:(260, 400)
+get_track args: 020 w1
+Track found: x: 0|y: 2|z: 0|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(160, 460) | e_pt:(240, 460)
+get_track args: 121 w1
+Track found: x: 1|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(300, 480) | e_pt:(300, 560)
+expansion list total: 15
+focus_track: x: 2|y: 2|z: 1|wire: 1|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 480) | e_pt:(460, 560)
+VERTICAL ODD WIRE
+get_track args: 130 w1
+Track found: x: 1|y: 3|z: 0|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 620) | e_pt:(400, 620)
+VERTICAL ODD WIRE
+get_track args: 130 w1
+Track found: x: 1|y: 3|z: 0|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 620) | e_pt:(400, 620)
+get_track args: 231 w1
+Track found: x: 2|y: 3|z: 1|wire: 1|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 640) | e_pt:(460, 720)
+VERTICAL ODD WIRE
+get_track args: 130 w1
+Track found: x: 1|y: 3|z: 0|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 620) | e_pt:(400, 620)
+get_track args: 231 w1
+Track found: x: 2|y: 3|z: 1|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 640) | e_pt:(460, 720)
+get_track args: 230 w0
+Track found: x: 2|y: 3|z: 0|wire: 0|label: -1|is_labeled: 0|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 580) | e_pt:(560, 580)
+VERTICAL ODD WIRE
+get_track args: 130 w1
+Track found: x: 1|y: 3|z: 0|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(320, 620) | e_pt:(400, 620)
+get_track args: 231 w1
+Track found: x: 2|y: 3|z: 1|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(460, 640) | e_pt:(460, 720)
+get_track args: 230 w0
+Track found: x: 2|y: 3|z: 0|wire: 0|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 580) | e_pt:(560, 580)
+expansion list total: 17
+focus_track: x: 2|y: 2|z: 0|wire: 0|label: 2|is_labeled: 1|is_unavailable: 0|is_target: 0|lb_p: 0|lb_p2: 0|s_pt:(480, 420) | e_pt:(560, 420)
+found target! x: 3|y: 2|z: 1|wire: 1|label: 3|is_labeled: 1|is_unavailable: 0|is_target: 1|lb_p: 4|lb_p2: 0|s_pt:(620, 480) | e_pt:(620, 560)
+ERROR!! Traceback not found!

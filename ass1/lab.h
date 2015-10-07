@@ -15,7 +15,8 @@ class Track {
     int wire; // 0 to W-1
     int lb_x; // logic block x coord
     int lb_y; // logic block y coord
-    int lb_p; // logic block pin number
+    int lb_p = 0; // logic block pin number
+    int lb_p2 = 0; // reserve in case of source=target
     
     int label = -1; //== cost
     bool is_labeled = false;
@@ -33,7 +34,6 @@ class Track {
       wire = -1;
       lb_x = -1;
       lb_y = -1;
-      lb_p = -1;
     }
     //comparison operator
     friend bool operator== (Track &t1, Track &t2);
@@ -47,16 +47,18 @@ bool operator== (Track &t1, Track &t2){
           t1.wire == t2.wire);
 }
 std::ostream& operator<< (std::ostream & out, Track const& data) {
-    out << "x: " << data.x << " | " ;
-    out << "y: " << data.y << " | " ;
-    out << "z: " << data.z << " | " ;
-    out << "wire: " << data.wire << " | " ;
-    out << "label: " << data.label << " | " ;
-    out << "is_labeled: " << data.is_labeled << " | " ;
-    out << "is_unavailable: " << data.is_unavailable << " | " ;
-    out << "is_target: " << data.is_target << " | ";
-    out << "s_pt: (" << data.s_pt.x << ", " << data.s_pt.y << ")"; //start point to draw
-    out << " | e_pt: (" << data.e_pt.x << ", " << data.e_pt.y << ")"; //start point to draw
+    out << "x: " << data.x << "|" ;
+    out << "y: " << data.y << "|" ;
+    out << "z: " << data.z << "|" ;
+    out << "wire: " << data.wire << "|" ;
+    out << "label: " << data.label << "|" ;
+    out << "is_labeled: " << data.is_labeled << "|" ;
+    out << "is_unavailable: " << data.is_unavailable << "|" ;
+    out << "is_target: " << data.is_target << "|";
+    out << "lb_p: " << data.lb_p << "|";
+    out << "lb_p2: " << data.lb_p2 << "|";
+    out << "s_pt:(" << data.s_pt.x << ", " << data.s_pt.y << ")"; //start point to draw
+    out << " | e_pt:(" << data.e_pt.x << ", " << data.e_pt.y << ")"; //start point to draw
     return out ;
 }
 

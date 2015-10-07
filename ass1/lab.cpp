@@ -20,6 +20,9 @@ int number_of_tracks = 0;
 bool debug_mode = false;
 float total_routes = 0;
 float routes_not_found = 0;
+bool is_routed = false;
+SourceSink * expanding_route = NULL;
+bool unidirect_mode = false; //bidirect by default
 
 //drawing my grid
 float rectangle_width = 80;
@@ -37,9 +40,9 @@ void act_on_new_button_func (void (*drawscreen_ptr) (void));
 void route_all_button_func (void (*drawscreen_ptr) (void));
 void expand_button_func(void (*drawscreen_ptr) (void));
 void traceback_button_func(void (*drawscreen_ptr) (void));
-void act_on_button_press (float x, float y, t_event_buttonPressed event);
-void act_on_mouse_move (float x, float y);
-void act_on_key_press (char c);
+//void act_on_button_press (float x, float y, t_event_buttonPressed event);
+//void act_on_mouse_move (float x, float y);
+//void act_on_key_press (char c);
 
 // A handy delay function for the animation example
 void delay (long milliseconds);
@@ -86,6 +89,9 @@ Circuit parse_circuit_file(string filename){
 
   SourceSink ** ptr = &cct.source_sink_head;
   while((*ptr) != NULL){
+    
+    total_routes ++;
+
     cctfile >> x1 >> y1 >> p1 >> x2 >> y2 >> p2;
 
     if(x1 == -1){
@@ -108,11 +114,41 @@ Circuit parse_circuit_file(string filename){
    
   } //end while
 
+  total_routes -=1; //account for -1 -1 -1 line
+
   cctfile.close();
 
   return cct;
 }
 
+void draw_cross(float x, float y){
+  
+  drawline(x-5, y-5, x+5, y+5);
+  drawline(x+5, y-5, x-5, y+5);
+  
+}
+
+void draw_pin(int pin_num, Track* track){
+  
+  float track_x = (track->s_pt.x + track->e_pt.x)/2;
+  float track_y = (track->s_pt.y + track->e_pt.y)/2;
+  float wire = track->wire+1;
+
+  draw_cross(track_x, track_y);
+
+  if(pin_num == 1){
+    drawline(track_x, track_y,
+             track_x, track_y + (cct.tracks_per_channel - wire +1) * wire_space);
+  }else if(pin_num == 2){
+    drawline(track_x, track_y, track_x - wire * wire_space, track_y);
+  }else if(pin_num == 3){
+    drawline(track_x, track_y, track_x, track_y - wire * wire_space);
+  }else if(pin_num == 4){
+    drawline(track_x, track_y,
+             track_x + (cct.tracks_per_channel - wire +1) * wire_space, track_y);
+  }
+
+}
 /* Prints the Circuit object
  */
 void print_circuit(Circuit cct){
@@ -274,6 +310,9 @@ void clear_labels(){
 }
 
 Track * get_track(int x, int y, int z, int wire) {
+
+  
+
   for(int i = 0; i < number_of_tracks; i++){
     if(all_tracks[i].x == x &&
         all_tracks[i].y == y &&
@@ -288,13 +327,14 @@ Track * get_track(int x, int y, int z, int wire) {
 Track * get_connected_track(Track * origin_track){
   Track * connected_track = NULL;
 
+  //get current track parameters
   int x, y, z, wire;
   x = origin_track->x;
   y = origin_track->y;
   z = origin_track->z;
   wire = origin_track->wire;
 
-
+  //clockwise track exploration
   int hor_x[6] = {x+1, x+1, x+1, x,   x-1, x  };
   int hor_y[6] = {y,   y,   y-1, y-1, y,   y  };
   int hor_z[6] = {z+1, z,   z+1, z+1, z,   z+1};
@@ -306,40 +346,116 @@ Track * get_connected_track(Track * origin_track){
   //horizontal track
   if(z == 0){
    
-    for(int i = 0; i < 6; i++ ) {
-      Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], wire);
-      if(track != NULL){
-         if(track->is_labeled || track->is_unavailable ){
-           //skip
-         } else {
-            return track; //return first found
-         }
+    if(unidirect_mode){
+      if(wire%2 == 0){ //even
+        for(int i = 0; i < 3; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 0: uni_wire = wire+1; break;
+            case 1: uni_wire = wire; break;
+            case 2: uni_wire = wire; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], uni_wire);
+          if(track != NULL){
+            if(track->is_labeled || track->is_unavailable ){
+              //skip
+            } else {
+               return track; //return first found
+            }
+          }
+        }//end for
+      }else if(wire%2 != 0){ //odd
+        for(int i = 3; i < 6; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 3: uni_wire = wire-1; break;
+            case 4: uni_wire = wire; break;
+            case 5: uni_wire = wire; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], uni_wire);
+          if(track != NULL){
+            if(track->is_labeled || track->is_unavailable ){
+              //skip
+            } else {
+               return track; //return first found
+            }
+          }
+        }
       }
-    } // end for
+    } else { //bi-directional
+      for(int i = 0; i < 6; i++ ) {
+        Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], wire);
+        if(track != NULL){
+           if(track->is_labeled || track->is_unavailable ){
+             //skip
+           } else {
+              return track; //return first found
+           }
+        }
+      }
+    } // end else
 
   // vertical track
   } else if(z == 1){
  
-    for(int i = 0; i < 6; i++ ) {
-      Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], wire);
-      if(track != NULL){
-         if(track->is_labeled || track->is_unavailable ){
-           //skip
-         } else {
-            return track;
-         }
+    if(unidirect_mode){
+      if(wire%2 == 0){ //even
+        for(int i = 3; i < 6; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 3: uni_wire = wire; break;
+            case 4: uni_wire = wire; break;
+            case 5: uni_wire = wire+1; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], uni_wire);
+          if(track != NULL){
+            if(track->is_labeled || track->is_unavailable ){
+              //skip
+            } else {
+               return track; //return first found
+            }
+          }
+        }//end for
+      }else if(wire%2 != 0){ //odd
+        for(int i = 0; i < 3; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 0: uni_wire = wire; break;
+            case 1: uni_wire = wire; break;
+            case 2: uni_wire = wire-1; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], uni_wire);
+          if(track != NULL){
+            if(track->is_labeled || track->is_unavailable ){
+              //skip
+            } else {
+               return track; //return first found
+            }
+          }
+        } // end for
       }
-    } // end for
+    }else{//bi directional
+      for(int i = 0; i < 6; i++ ) {
+        Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], wire);
+        if(track != NULL){
+           if(track->is_labeled || track->is_unavailable ){
+             //skip
+           } else {
+              return track;
+           }
+        }
+      } // end for
+    }
   } else {}
 
  // if(connected_track == NULL)
     //cout << "No available tracks were found!" << endl;
   
   return connected_track;
-}
-
-
-void expand_one(void){
 }
 
 /* expands to find target
@@ -443,7 +559,6 @@ void draw_traceback_routes(void){
 
   cout << "drawing tracebacks" <<endl;
   //color go through traced back routes
-  setcolor(GREEN);
 
   for(list<list <Track *>>::iterator it = routes_list.begin();
       it != routes_list.end();
@@ -459,7 +574,24 @@ void draw_traceback_routes(void){
         t_point s = (*itt)->s_pt;
         t_point e = (*itt)->e_pt;
         int ori = (*itt)->z;
+        int pin = (*itt)->lb_p;
+        int pin2 = (*itt)->lb_p2;
+        if(pin != 0 || pin2 != 0){
+          //connected to a logic block. draw the conn
+          if( next(itt,1) == (*it).end() ){
+            setcolor(PURPLE);
+          }else{
+            setcolor(GREEN);
+          }
+          if(pin2 != 0){
+            draw_pin(pin, (*itt));
+            draw_pin(pin2, (*itt));
+          } else {
+            draw_pin(pin, (*itt));
+          }
+        }
 
+        setcolor(GREEN);
         if(tmp_s.x == 0){
           //first iteration, skip
         } else {
@@ -520,8 +652,13 @@ int main(int argc, char* argv[]) {
     return 0;
   }
   if(argv[2] != NULL){
+    unidirect_mode = true;
+    cout << "Running Uni-directional case" << endl;
+  }
+  if(argv[3] != NULL){
     debug_mode = true;
   }
+
 	std::cout << "Parsing cct File" << argv[1] << endl;
   cct = parse_circuit_file(argv[1]);
 
@@ -541,10 +678,10 @@ int main(int argc, char* argv[]) {
 	// Set the message at the bottom (also UTF-8)
 	update_message("Assignment 1 - 2015");
 
-	create_button ("Window", "Expand 0", expand_button_func); // name is UTF-8
-	create_button ("Window", "Next Step 0", act_on_new_button_func); // name is UTF-8
+	create_button ("Window", "I'm nobody", act_on_new_button_func); // name is UTF-8
 	create_button ("Window", "Traceback Routes", traceback_button_func); // name is UTF-8
 	create_button ("Window", "Route All", route_all_button_func); // name is UTF-8
+	create_button ("Window", "Expand Route", expand_button_func); // name is UTF-8
 
 	event_loop(NULL, NULL, NULL, drawscreen);   
 
@@ -568,10 +705,6 @@ void drawscreen (void) {
 	set_draw_mode (DRAW_NORMAL);  // Should set this if your program does any XOR drawing in callbacks.
 	clearscreen();  /* Should precede drawing for all drawscreens */
 
-	setfontsize (10);
-	setlinestyle (SOLID);
-	setlinewidth (1);
-	setcolor (BLACK);
 
   int n = cct.grid_size;
   int w = cct.tracks_per_channel;
@@ -583,12 +716,22 @@ void drawscreen (void) {
 		 * Draw logic blocks 
 		 **************/
 
-		t_bound_box logic_block = t_bound_box(start_point, rectangle_width, rectangle_height);
+    setfontsize (12);
+
+		t_bound_box logic_block = 
+      t_bound_box(start_point, rectangle_width, rectangle_height);
 
 		for(int i = 0; i < n; i++) {
       for(int j = 0; j < n; j++){
+
         setcolor(LIGHTGREY);
         fillrect(logic_block);
+
+        setcolor(BLUE);
+        drawtext(logic_block.get_center(),
+            to_string(j) + ", " + to_string(i),
+            logic_block);
+
         logic_block += t_point(rectangle_width*2,0);
       }
       logic_block += t_point(-rectangle_width*n*2,rectangle_height*2);
@@ -599,27 +742,18 @@ void drawscreen (void) {
 	/********
 	 * Draw wires 
 	 ********/
-	{
+  {
     setcolor(BLACK);
 		setlinestyle (SOLID);
 		setlinewidth (1);
 
-    number_of_tracks = initialize_tracks(rectangle_width, rectangle_height, wire_space);
+    number_of_tracks = 
+      initialize_tracks(rectangle_width, rectangle_height, wire_space);
 
-    if(expansion_list.empty()){ cout <<"empy"<<endl;}
-
-    
     //TODO: implement event callbacks for click actions - step by step debug
     
-    //always color in traceback if exists
+    //always color in traceback
     draw_traceback_routes();
-
-    //color all tracks green
-   // setcolor(GREEN);
-   // for(int i = 0; i < number_of_tracks; i++){
-   //   drawline(all_tracks[i].s_pt, all_tracks[i].e_pt);
-   // }
-
 
   }
 
@@ -646,7 +780,127 @@ void act_on_new_button_func (void (*drawscreen_ptr) (void)) {
         drawscreen_ptr ();  
 }
 
+void route_one(SourceSink * route_ptr){
+
+  Track * t_source = NULL;
+  Track * t_sink = NULL;
+
+  //print out which route is being processed
+  cout << "Processing route: " << 
+    route_ptr->X1 << route_ptr->Y1 << route_ptr->P1 << " " <<
+    route_ptr->X2 << route_ptr->Y2 << route_ptr->P2 << endl;
+
+  for(int i = 0; i < cct.tracks_per_channel; i++){ //find track of wire 0 
+
+    // mark sources
+    t_source = get_connected_track(route_ptr->X1, route_ptr->Y1, route_ptr->P1, i);
+    t_source->is_labeled = true;
+    t_source->label = 0;
+    t_source->lb_p = route_ptr->P1;
+    if(debug_mode) drawtext(t_source->s_pt, to_string(0), FLT_MAX, FLT_MAX);
+
+    expansion_list.push_back(t_source);
+    if(debug_mode) cout << "Source ===== " << *t_source <<  endl;
+      
+    // mark targets
+    t_sink = get_connected_track(route_ptr->X2, route_ptr->Y2, route_ptr->P2, i);
+    t_sink->is_target = true;
+    if(t_source->x == t_sink->x && t_source->y == t_sink->y){
+      t_sink->lb_p2 = route_ptr->P2; //if source == target, target uses p2
+    } else {
+      t_sink->lb_p = route_ptr->P2;
+    }
+    if(debug_mode) drawtext(t_sink->s_pt, "T", FLT_MAX, FLT_MAX);
+    if(debug_mode) cout << "Sink ======= " << *t_sink << endl;
+
+  }// end for marking source and targets
+
+  // expand -> returns target if found
+  // goes through the entire expansion_list
+  Track * found_target = expand();
+
+  if(found_target != NULL) {// target found!
+    if(debug_mode) cout << "found target! " << *found_target <<endl;
+    //traceback to source
+    //traceback
+    list<Track*> route;
+    Track * trace = found_target;
+
+    route.push_front(trace);    
+    trace->is_unavailable = true;
+    while(trace->label >= 0){ //if its 0, we don't want to trace anymore
+      if(trace->label != 0){
+        trace = traceback_route(trace);
+        trace->is_unavailable = true;
+        route.push_front(trace);
+      } else {
+        trace->is_unavailable = true;  //get source as well
+        route.push_front(trace);
+        break;
+      }
+    }
+
+    //add traced back route into list
+    routes_list.push_back(route); 
+
+    //lets iterate through them?
+    if(debug_mode) {
+      cout << "\n" ;
+      for(list<Track *>::iterator it = route.begin();
+          it != route.end();
+          ++it) {
+        /* std::cout << *it; ... */
+        cout << "traceback -->> "<< **it << endl;
+      }
+    }
+
+  } else {
+    cout << "found target NOT" << endl;
+    routes_not_found ++;
+  }
+
+  expansion_list.clear(); // we already found the target. clear it up
+  //clear up targets
+  for(int i = 0; i < cct.tracks_per_channel; i++){
+    t_sink = get_connected_track(route_ptr->X2, route_ptr->Y2, route_ptr->P2, i);
+    t_sink->is_target=false;
+    if(debug_mode) cout << "clear targets --> " << *t_sink << endl;
+  }
+  //gotta clear all labels
+  clear_labels();
+
+}
+
 void expand_button_func(void (*drawscreen_ptr) (void)){
+
+  setfontsize(10);
+  setcolor (RED);
+
+  // Mark source tracks and put into expansion list
+  // Mark target tracks
+  if(is_routed){
+    return; //don't step through if we're already routed
+  }
+  if(expanding_route == NULL){
+     expanding_route = cct.source_sink_head;
+  }
+
+  route_one(expanding_route);
+
+  if(expanding_route->next == NULL){ // this is the last route
+    is_routed = true;
+
+    cout << "Finished Processing "<< total_routes <<" Routes" << endl;
+    if(routes_not_found > 0) {
+      cout << routes_not_found << " routes were not found!" << endl;
+    }
+    cout << "Percentage Routed: " 
+         << (total_routes - routes_not_found) / total_routes * 100 
+         << "%" << endl;
+
+  } else {
+    expanding_route  = expanding_route->next;
+  }
 
 
 }
@@ -654,92 +908,18 @@ void expand_button_func(void (*drawscreen_ptr) (void)){
 
 void route_all_button_func(void (*drawscreen_ptr) (void)) {
 
-  routes_not_found = 0;
-
-  int n = cct.grid_size;
-  int w = cct.tracks_per_channel;
+  setcolor(RED);
+  if(is_routed){ // we are routing only once
+    return;
+  }
+  is_routed = true;
 
   // Mark source tracks and put into expansion list
   // Mark target tracks
   for(SourceSink * ptr = cct.source_sink_head; ptr != NULL; ptr = ptr->next){
-
-    total_routes ++;
-
-    Track * t_source = NULL;
-    Track * t_sink = NULL;
-
-    //print out which route is being processed
-    cout << "Processing route: " << 
-      ptr->X1 << ptr->Y1 << ptr->P1 << " " <<
-      ptr->X2 << ptr->Y2 << ptr->P2 << endl;
-
-    for(int i = 0; i < w; i++){ //find track of wire 0 
-
-      // mark sources
-      t_source = get_connected_track(ptr->X1, ptr->Y1, ptr->P1, i);
-      t_source->is_labeled = true;
-      t_source->label = 0;
-      expansion_list.push_back(t_source);
-      if(debug_mode) cout << "Source ===== " << *t_source <<  endl;
-        
-      // mark targets
-      t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
-      t_sink->is_target = true;
-      if(debug_mode) cout << "Sink ======= " << *t_sink << endl;
-
-    }// end for marking source and targets
-
-
-    // expand -> returns target if found
-    Track * found_target = expand();
-
-    if(found_target != NULL) {// target found!
-      if(debug_mode) cout << "found target! " << *found_target <<endl;
-      //traceback to source
-      //traceback
-      list<Track*> route;
-      Track * trace = found_target;
-
-      route.push_front(trace);    
-      trace->is_unavailable = true;
-      while(trace->label > 0){ //if its 0, we don't want to trace anymore
-        trace = traceback_route(trace);
-        trace->is_unavailable = true;
-        route.push_front(trace);
-      }
-
-      //add traced back route into list
-      routes_list.push_back(route); 
-
-
-      //lets iterate through them?
-      if(debug_mode) {
-        cout << "\n" ;
-        for(list<Track *>::iterator it = route.begin();
-            it != route.end();
-            ++it) {
-          /* std::cout << *it; ... */
-          cout << "traceback -->> "<< **it << endl;
-        }
-      }
-
-
-    } else {
-      cout << "found target NOT" << endl;
-      routes_not_found ++;
-    }
-
-    expansion_list.clear(); // we already found the target. clear it up
-    //clear up targets
-    for(int i = 0; i < w; i++){
-      t_sink = get_connected_track(ptr->X2, ptr->Y2, ptr->P2, i);
-      t_sink->is_target=false;
-      if(debug_mode) cout << "clear targets --> " << *t_sink << endl;
-
-    }
-    //gotta clear all labels
-    clear_labels();
     
+    route_one(ptr);   
+
   }//end for each source/sink
 
   cout << "Finished Processing "<< total_routes <<" Routes" << endl;
@@ -758,37 +938,37 @@ void traceback_button_func(void (*drawscreen_ptr) (void) ){
   draw_traceback_routes();
 }
 
-void act_on_button_press (float x, float y, t_event_buttonPressed event) {
+//void act_on_button_press (float x, float y, t_event_buttonPressed event) {
+//
+///* Called whenever event_loop gets a button press in the graphics *
+// * area.  Allows the user to do whatever he/she wants with button *
+// * clicks.                                                        */
+//
+//    std::cout << "User clicked a mouse button at coordinates (" 
+//             << x << "," << y << ")";
+//    if (event.shift_pressed || event.ctrl_pressed) {
+//            std::cout << " with ";
+//            if (event.shift_pressed) {
+//                    std::cout << "shift ";
+//                    if (event.ctrl_pressed)
+//                            std::cout << "and ";
+//            }
+//            if (event.ctrl_pressed) 
+//                    std::cout << "control ";
+//            std::cout << "pressed.";
+//    }
+//    std::cout << std::endl;
+//
+//    if (line_entering_demo) {
+//        line_pts.push_back(t_point(x,y));
+//        have_rubber_line = false;
+//
+//        // Redraw screen to show the new line.  Could do incrementally, but this is easier.
+//        drawscreen ();  
+//    }
+//}
 
-/* Called whenever event_loop gets a button press in the graphics *
- * area.  Allows the user to do whatever he/she wants with button *
- * clicks.                                                        */
-
-    std::cout << "User clicked a mouse button at coordinates (" 
-             << x << "," << y << ")";
-    if (event.shift_pressed || event.ctrl_pressed) {
-            std::cout << " with ";
-            if (event.shift_pressed) {
-                    std::cout << "shift ";
-                    if (event.ctrl_pressed)
-                            std::cout << "and ";
-            }
-            if (event.ctrl_pressed) 
-                    std::cout << "control ";
-            std::cout << "pressed.";
-    }
-    std::cout << std::endl;
-
-    if (line_entering_demo) {
-        line_pts.push_back(t_point(x,y));
-        have_rubber_line = false;
-
-        // Redraw screen to show the new line.  Could do incrementally, but this is easier.
-        drawscreen ();  
-    }
-}
-
-
+/*
 void act_on_mouse_move (float x, float y) {
 	// function to handle mouse move event, the current mouse position in the current world coordinate
 	// system (as defined in your call to init_world) is returned
@@ -814,10 +994,10 @@ void act_on_mouse_move (float x, float y) {
 		drawline (line_pts[ipt], rubber_pt);   // Draw new line
 	}
 }
-
-
+*/
+/*
 void act_on_key_press (char c) {
 	// function to handle keyboard press event, the ASCII character is returned
 	std::cout << "Key press: " << c << std::endl;
 }
-
+*/
