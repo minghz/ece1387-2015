@@ -36,7 +36,7 @@ t_point start_point = t_point(160,160);
 
 // Callbacks for event-driven window handling.
 void drawscreen (void);
-void act_on_new_button_func (void (*drawscreen_ptr) (void));
+void count_used_wires_button_func(void (*drawscreen_ptr) (void));
 void route_all_button_func (void (*drawscreen_ptr) (void));
 void expand_button_func(void (*drawscreen_ptr) (void));
 void traceback_button_func(void (*drawscreen_ptr) (void));
@@ -49,11 +49,10 @@ void delay (long milliseconds);
 
 // State variables for the example showing entering lines and rubber banding
 // and the new button example.
-static bool line_entering_demo = false;
-static bool have_rubber_line = false;
+//static bool line_entering_demo = false;
+//static bool have_rubber_line = false;
 static t_point rubber_pt;         // Last point to which we rubber-banded.
 static std::vector<t_point> line_pts;  // Stores the points entered by user clicks.
-static int num_new_button_clicks = 0;
 
 
 // You can use any coordinate system you want.
@@ -528,26 +527,97 @@ Track * traceback_route(Track * target){
   //horizontal track
   if(z == 0){
    
-    for(int i = 0; i < 6; i++ ) {
-      Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], wire);
-      if(track != NULL){
-         if(track->label == label && track->is_labeled ){
-           return track;
-         }
+    if(unidirect_mode){
+      if(wire%2 == 0){ //even
+        for(int i = 0; i < 3; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 0: uni_wire = wire; break;
+            case 1: uni_wire = wire; break;
+            case 2: uni_wire = wire+1; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], uni_wire);
+          if(track != NULL){
+            if(track->label == label && track->is_labeled ){
+              return track;
+            }
+          }
+        }//end for
+      }else if(wire%2 != 0){ //odd
+        for(int i = 3; i < 6; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 3: uni_wire = wire; break;
+            case 4: uni_wire = wire; break;
+            case 5: uni_wire = wire-1; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], uni_wire);
+          if(track != NULL){
+            if(track->label == label && track->is_labeled ){
+              return track;
+            }
+          }
+        }
       }
-    } // end for
-
+    }else{ //bidirectional mode
+      for(int i = 0; i < 6; i++ ) {
+        Track * track = get_track(hor_x[i], hor_y[i], hor_z[i], wire);
+        if(track != NULL){
+          if(track->label == label && track->is_labeled ){
+            return track;
+          }
+        }
+      } // end for
+    }
   // vertical track
   } else if(z == 1){
- 
-    for(int i = 0; i < 6; i++ ) {
-      Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], wire);
-      if(track != NULL){
-         if(track->label == label && track->is_labeled ){
-           return track;
-         }
+
+    if(unidirect_mode){
+      if(wire%2 == 0){ //even
+        for(int i = 3; i < 6; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 3: uni_wire = wire+1; break;
+            case 4: uni_wire = wire; break;
+            case 5: uni_wire = wire; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], uni_wire);
+          if(track != NULL){
+            if(track->label == label && track->is_labeled ){
+              return track;
+            }
+          }
+        }//end for
+      }else if(wire%2 != 0){ //odd
+        for(int i = 0; i < 3; i++ ) {
+          int uni_wire = wire;
+          switch(i){
+            case 0: uni_wire = wire-1; break;
+            case 1: uni_wire = wire; break;
+            case 2: uni_wire = wire; break;
+            default: cout << "something went wrong" << endl;
+          }
+          Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], uni_wire);
+          if(track != NULL){
+            if(track->label == label && track->is_labeled ){
+              return track;
+            }
+          }
+        } // end for
       }
-    } // end for
+    } else {//bidirectional
+      for(int i = 0; i < 6; i++ ) {
+        Track * track = get_track(ver_x[i], ver_y[i], ver_z[i], wire);
+        if(track != NULL){
+           if(track->label == label && track->is_labeled ){
+             return track;
+           }
+        }
+      } // end for
+    }
   } else {}
 
   cout <<"ERROR!! Traceback not found!" <<endl;
@@ -645,22 +715,55 @@ void draw_traceback_routes(void){
   }
 }
 
-int main(int argc, char* argv[]) {
+void print_instructions(void){
+    //no arguments provided print instructions
+    cout <<endl;
+    cout << "Usage:" <<endl;
+    cout << "./lab <circuit_file> [-v] [-b | -u]" <<endl;
+    cout <<endl;
+    cout << "    <circuit_file> : file containing grid and routing definition"<< endl;
+    cout << "    -v : verbose"<< endl;
+    cout << "    -b : bi-directional routing option (default)"<< endl;
+    cout << "    -u : uni-directional routing option"<< endl;
+    cout <<endl;
+}
+int main(int argc, char* const argv[]) {
 
-  if(argv[1] == NULL){
-    cout << "please provide cct file" << endl;
+
+  string cct_file_name = "";
+  if(argc > 4 || argc == 1){
+    print_instructions();
+    return 0;
+  } else {
+    for(int i = 1; i < argc; i++){
+      if(argv[i] == string("-u")){
+        unidirect_mode = true;
+      }else if(argv[i] == string("-b")){
+        unidirect_mode = false;
+      }else if(argv[i] == string("-v")){
+        debug_mode = true;
+      }else{
+        cct_file_name = argv[i];
+      }
+    }// end for
+  }
+  if(cct_file_name == "") {
+    cout << "Error: <circuit_file> was not provided" << endl;
+    print_instructions();
     return 0;
   }
-  if(argv[2] != NULL){
-    unidirect_mode = true;
+  if(unidirect_mode){
     cout << "Running Uni-directional case" << endl;
+  }else{
+    cout << "Running Bi-directional case" << endl;
   }
-  if(argv[3] != NULL){
-    debug_mode = true;
+  if(debug_mode){
+    cout << "Verbose Mode On" << endl;
   }
+  cout << endl;
 
-	std::cout << "Parsing cct File" << argv[1] << endl;
-  cct = parse_circuit_file(argv[1]);
+	std::cout << "Parsing cct File " << cct_file_name << endl;
+  cct = parse_circuit_file(cct_file_name);
 
   //print_circuit(cct);
 
@@ -678,7 +781,7 @@ int main(int argc, char* argv[]) {
 	// Set the message at the bottom (also UTF-8)
 	update_message("Assignment 1 - 2015");
 
-	create_button ("Window", "I'm nobody", act_on_new_button_func); // name is UTF-8
+	create_button ("Window", "Count Used Wires", count_used_wires_button_func); // name is UTF-8
 	create_button ("Window", "Traceback Routes", traceback_button_func); // name is UTF-8
 	create_button ("Window", "Route All", route_all_button_func); // name is UTF-8
 	create_button ("Window", "Expand Route", expand_button_func); // name is UTF-8
@@ -767,17 +870,23 @@ void delay (long milliseconds) {
 }
 
 
-void act_on_new_button_func (void (*drawscreen_ptr) (void)) {
+void count_used_wires_button_func (void (*drawscreen_ptr) (void)) {
 
-	char old_button_name[200], new_button_name[200];
-	std::cout << "Next Pressed\n";
-	sprintf (old_button_name, "Next %d", num_new_button_clicks);
-	num_new_button_clicks++;
-	sprintf (new_button_name, "Next %d", num_new_button_clicks);
-	change_button_text (old_button_name, new_button_name);
+	char unavailable_wire_number[200], old_button_name[200];
+  int unavailable_wires = 0;
 
-        // Re-draw the screen (a few squares are changing colour with time)
-        drawscreen_ptr ();  
+  for(int i = 0; i < number_of_tracks; i++){
+    if(all_tracks[i].is_unavailable){
+      unavailable_wires ++;
+    }
+  }
+
+	std::cout << "Total used wires: " << unavailable_wires<<endl;
+
+	sprintf (old_button_name, "Count Used Wires");
+	sprintf (unavailable_wire_number, "Wires: %d", unavailable_wires);
+	change_button_text (old_button_name, unavailable_wire_number);
+
 }
 
 void route_one(SourceSink * route_ptr){
@@ -850,7 +959,7 @@ void route_one(SourceSink * route_ptr){
           it != route.end();
           ++it) {
         /* std::cout << *it; ... */
-        cout << "traceback -->> "<< **it << endl;
+        //cout << "traceback -->> "<< **it << endl;
       }
     }
 
