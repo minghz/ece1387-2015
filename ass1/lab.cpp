@@ -456,13 +456,17 @@ void draw_traceback_routes(void){
             setcolor(GREEN);
           }
           if(pin2 != 0){
-            draw_pin(pin, (*itt));
-            draw_pin(pin2, (*itt));
+            if((*itt) == (*it).front() || ((*itt) == (*it).back()) && (*it).front() == (*it).back()){
+              draw_pin(pin, (*itt));
+              draw_pin(pin2, (*itt));
+            }
           } else {
-            draw_pin(pin, (*itt));
+            if((*itt) == (*it).front() || ((*itt) == (*it).back()))
+              draw_pin(pin, (*itt));
           }
         }
 
+	//draw connections between tracks
         setcolor(GREEN);
         if(tmp_s.x == 0){
           //first iteration, skip
