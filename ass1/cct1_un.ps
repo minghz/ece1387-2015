@@ -1,0 +1,662 @@
+%!PS-Adobe-1.0
+%%DocumentFonts: Helvetica
+%%Pages: 1
+%%HiResBoundingBox: 36.00 200.77 576.00 576.23
+%%EndComments
+/censhow   %draw a centered string
+ { moveto               % move to proper spot
+   dup stringwidth pop  % get x length of string
+   -2 div               % Proper left start
+   yoff rmoveto         % Move left that much and down half font height
+   show newpath } def   % show the string
+
+/rcenshow  %draw a centered string
+ { rmoveto              % move to proper spot
+   dup stringwidth pop  % get x length of string
+   -2 div               % Proper left start
+   yoff rmoveto         % Move left that much and down half font height
+   show newpath } def   % show the string
+/setfontsize     % set font to desired size and compute centering yoff
+ { /Helvetica findfont
+   exch scalefont
+   setfont         % Font size set ...
+
+   0 0 moveto      % Get vertical centering offset
+   (Xg) true charpath
+   flattenpath pathbbox
+   /ascent exch def pop -1 mul /descent exch def pop
+   newpath
+   descent ascent sub 2 div /yoff exch def } def
+
+% Next two lines for debugging only.
+/str 20 string def
+/pnum {str cvs print (  ) print} def
+/drawline      % draw a line from (x2,y2) to (x1,y1)
+ { moveto lineto stroke } def
+
+/rect          % outline a rectangle 
+ { /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+   x1 y1 moveto
+   x2 y1 lineto
+   x2 y2 lineto
+   x1 y2 lineto
+   closepath } def
+
+/drawrect      % draw outline of a rectanagle
+ { rect stroke } def
+
+/fillrect      % fill in a rectanagle
+ { rect fill } def
+
+/drawarc { arc stroke } def           % draw an arc
+/drawarcn { arcn stroke } def         % draw an arc in the opposite direction
+
+%Fill a counterclockwise or clockwise arc sector, respectively.
+/fillarc { moveto currentpoint 5 2 roll arc closepath fill } def
+/fillarcn { moveto currentpoint 5 2 roll arcn closepath fill } def
+
+/fillpoly { 3 1 roll moveto         % move to first point
+   2 exch 1 exch {pop lineto} for   % line to all other points
+   closepath fill } def
+
+%Color Definitions:
+/white { 1 setgray } def
+/black { 0 setgray } def
+/grey55 { .55 setgray } def
+/grey75 { .75 setgray } def
+/blue { 0 0 1 setrgbcolor } def
+/green { 0 1 0 setrgbcolor } def
+/yellow { 1 1 0 setrgbcolor } def
+/cyan { 0 1 1 setrgbcolor } def
+/red { 1 0 0 setrgbcolor } def
+/pink { 1 0.75 0.8 setrgbcolor } def
+/lightpink { 1 0.71 0.76 setrgbcolor } def
+/darkgreen { 0 0.5 0 setrgbcolor } def
+/magenta { 1 0 1 setrgbcolor } def
+/bisque { 1 0.89 0.77 setrgbcolor } def
+/lightskyblue { 0.53 0.81 0.98 setrgbcolor } def
+/thistle { 0.85 0.75 0.85 setrgbcolor } def
+/plum { 0.87 0.63 0.87 setrgbcolor } def
+/khaki { 0.94 0.9 0.55 setrgbcolor } def
+/coral { 1 0.5 0.31 setrgbcolor } def
+/turquoise { 0.25 0.88 0.82 setrgbcolor } def
+/mediumpurple { 0.58 0.44 0.86 setrgbcolor } def
+/darkslateblue { 0.28 0.24 0.55 setrgbcolor } def
+/darkkhaki { 0.74 0.72 0.42 setrgbcolor } def
+/lightmediumblue { 0.33 0.33 1.00 setrgbcolor } def
+/saddlebrown { 0.55 0.27 0.07 setrgbcolor } def
+/firebrick { 0.70 0.13 0.13 setrgbcolor } def
+/limegreen { 0.20 0.80 0.20 setrgbcolor } def
+
+%Solid and dashed line definitions:
+/linesolid {[] 0 setdash} def
+/linedashed {[3 3] 0 setdash} def
+
+%%EndProlog
+%%Page: 1 1
+
+green
+linesolid
+1 setlinewidth
+10 setfontsize
+black
+9 setfontsize
+(Assignment 1 - 2015) 306.00 207.77 censhow
+green
+10 setfontsize
+36.00 215.77 576.00 576.23 rect clip newpath
+
+white
+clippath fill
+
+green
+12 setfontsize
+grey75
+169.47 260.43 209.03 299.98 fillrect
+blue
+gsave
+189.25 280.20 moveto
+0.8 0.8 scale
+0 rotate
+(0, 0) 0 0 rcenshow
+grestore
+grey75
+248.58 260.43 288.14 299.98 fillrect
+blue
+gsave
+268.36 280.20 moveto
+0.8 0.8 scale
+0 rotate
+(1, 0) 0 0 rcenshow
+grestore
+grey75
+327.69 260.43 367.25 299.98 fillrect
+blue
+gsave
+347.47 280.20 moveto
+0.8 0.8 scale
+0 rotate
+(2, 0) 0 0 rcenshow
+grestore
+grey75
+406.80 260.43 446.36 299.98 fillrect
+blue
+gsave
+426.58 280.20 moveto
+0.8 0.8 scale
+0 rotate
+(3, 0) 0 0 rcenshow
+grestore
+grey75
+169.47 339.54 209.03 379.09 fillrect
+blue
+gsave
+189.25 359.32 moveto
+0.8 0.8 scale
+0 rotate
+(0, 1) 0 0 rcenshow
+grestore
+grey75
+248.58 339.54 288.14 379.09 fillrect
+blue
+gsave
+268.36 359.32 moveto
+0.8 0.8 scale
+0 rotate
+(1, 1) 0 0 rcenshow
+grestore
+grey75
+327.69 339.54 367.25 379.09 fillrect
+blue
+gsave
+347.47 359.32 moveto
+0.8 0.8 scale
+0 rotate
+(2, 1) 0 0 rcenshow
+grestore
+grey75
+406.80 339.54 446.36 379.09 fillrect
+blue
+gsave
+426.58 359.32 moveto
+0.8 0.8 scale
+0 rotate
+(3, 1) 0 0 rcenshow
+grestore
+grey75
+169.47 418.65 209.03 458.20 fillrect
+blue
+gsave
+189.25 438.43 moveto
+0.8 0.8 scale
+0 rotate
+(0, 2) 0 0 rcenshow
+grestore
+grey75
+248.58 418.65 288.14 458.20 fillrect
+blue
+gsave
+268.36 438.43 moveto
+0.8 0.8 scale
+0 rotate
+(1, 2) 0 0 rcenshow
+grestore
+grey75
+327.69 418.65 367.25 458.20 fillrect
+blue
+gsave
+347.47 438.43 moveto
+0.8 0.8 scale
+0 rotate
+(2, 2) 0 0 rcenshow
+grestore
+grey75
+406.80 418.65 446.36 458.20 fillrect
+blue
+gsave
+426.58 438.43 moveto
+0.8 0.8 scale
+0 rotate
+(3, 2) 0 0 rcenshow
+grestore
+grey75
+169.47 497.76 209.03 537.32 fillrect
+blue
+gsave
+189.25 517.54 moveto
+0.8 0.8 scale
+0 rotate
+(0, 3) 0 0 rcenshow
+grestore
+grey75
+248.58 497.76 288.14 537.32 fillrect
+blue
+gsave
+268.36 517.54 moveto
+0.8 0.8 scale
+0 rotate
+(1, 3) 0 0 rcenshow
+grestore
+grey75
+327.69 497.76 367.25 537.32 fillrect
+blue
+gsave
+347.47 517.54 moveto
+0.8 0.8 scale
+0 rotate
+(2, 3) 0 0 rcenshow
+grestore
+grey75
+406.80 497.76 446.36 537.32 fillrect
+blue
+gsave
+426.58 517.54 moveto
+0.8 0.8 scale
+0 rotate
+(3, 3) 0 0 rcenshow
+grestore
+black
+169.47 255.48 209.03 255.48 drawline
+169.47 250.54 209.03 250.54 drawline
+169.47 245.59 209.03 245.59 drawline
+169.47 240.65 209.03 240.65 drawline
+169.47 235.70 209.03 235.70 drawline
+169.47 230.76 209.03 230.76 drawline
+169.47 225.82 209.03 225.82 drawline
+169.47 220.87 209.03 220.87 drawline
+248.58 255.48 288.14 255.48 drawline
+248.58 250.54 288.14 250.54 drawline
+248.58 245.59 288.14 245.59 drawline
+248.58 240.65 288.14 240.65 drawline
+248.58 235.70 288.14 235.70 drawline
+248.58 230.76 288.14 230.76 drawline
+248.58 225.82 288.14 225.82 drawline
+248.58 220.87 288.14 220.87 drawline
+327.69 255.48 367.25 255.48 drawline
+327.69 250.54 367.25 250.54 drawline
+327.69 245.59 367.25 245.59 drawline
+327.69 240.65 367.25 240.65 drawline
+327.69 235.70 367.25 235.70 drawline
+327.69 230.76 367.25 230.76 drawline
+327.69 225.82 367.25 225.82 drawline
+327.69 220.87 367.25 220.87 drawline
+406.80 255.48 446.36 255.48 drawline
+406.80 250.54 446.36 250.54 drawline
+406.80 245.59 446.36 245.59 drawline
+406.80 240.65 446.36 240.65 drawline
+406.80 235.70 446.36 235.70 drawline
+406.80 230.76 446.36 230.76 drawline
+406.80 225.82 446.36 225.82 drawline
+406.80 220.87 446.36 220.87 drawline
+169.47 337.07 209.03 337.07 drawline
+169.47 332.12 209.03 332.12 drawline
+169.47 327.18 209.03 327.18 drawline
+169.47 322.23 209.03 322.23 drawline
+169.47 317.29 209.03 317.29 drawline
+169.47 312.34 209.03 312.34 drawline
+169.47 307.40 209.03 307.40 drawline
+169.47 302.45 209.03 302.45 drawline
+248.58 337.07 288.14 337.07 drawline
+248.58 332.12 288.14 332.12 drawline
+248.58 327.18 288.14 327.18 drawline
+248.58 322.23 288.14 322.23 drawline
+248.58 317.29 288.14 317.29 drawline
+248.58 312.34 288.14 312.34 drawline
+248.58 307.40 288.14 307.40 drawline
+248.58 302.45 288.14 302.45 drawline
+327.69 337.07 367.25 337.07 drawline
+327.69 332.12 367.25 332.12 drawline
+327.69 327.18 367.25 327.18 drawline
+327.69 322.23 367.25 322.23 drawline
+327.69 317.29 367.25 317.29 drawline
+327.69 312.34 367.25 312.34 drawline
+327.69 307.40 367.25 307.40 drawline
+327.69 302.45 367.25 302.45 drawline
+406.80 337.07 446.36 337.07 drawline
+406.80 332.12 446.36 332.12 drawline
+406.80 327.18 446.36 327.18 drawline
+406.80 322.23 446.36 322.23 drawline
+406.80 317.29 446.36 317.29 drawline
+406.80 312.34 446.36 312.34 drawline
+406.80 307.40 446.36 307.40 drawline
+406.80 302.45 446.36 302.45 drawline
+169.47 416.18 209.03 416.18 drawline
+169.47 411.23 209.03 411.23 drawline
+169.47 406.29 209.03 406.29 drawline
+169.47 401.34 209.03 401.34 drawline
+169.47 396.40 209.03 396.40 drawline
+169.47 391.45 209.03 391.45 drawline
+169.47 386.51 209.03 386.51 drawline
+169.47 381.57 209.03 381.57 drawline
+248.58 416.18 288.14 416.18 drawline
+248.58 411.23 288.14 411.23 drawline
+248.58 406.29 288.14 406.29 drawline
+248.58 401.34 288.14 401.34 drawline
+248.58 396.40 288.14 396.40 drawline
+248.58 391.45 288.14 391.45 drawline
+248.58 386.51 288.14 386.51 drawline
+248.58 381.57 288.14 381.57 drawline
+327.69 416.18 367.25 416.18 drawline
+327.69 411.23 367.25 411.23 drawline
+327.69 406.29 367.25 406.29 drawline
+327.69 401.34 367.25 401.34 drawline
+327.69 396.40 367.25 396.40 drawline
+327.69 391.45 367.25 391.45 drawline
+327.69 386.51 367.25 386.51 drawline
+327.69 381.57 367.25 381.57 drawline
+406.80 416.18 446.36 416.18 drawline
+406.80 411.23 446.36 411.23 drawline
+406.80 406.29 446.36 406.29 drawline
+406.80 401.34 446.36 401.34 drawline
+406.80 396.40 446.36 396.40 drawline
+406.80 391.45 446.36 391.45 drawline
+406.80 386.51 446.36 386.51 drawline
+406.80 381.57 446.36 381.57 drawline
+169.47 495.29 209.03 495.29 drawline
+169.47 490.34 209.03 490.34 drawline
+169.47 485.40 209.03 485.40 drawline
+169.47 480.45 209.03 480.45 drawline
+169.47 475.51 209.03 475.51 drawline
+169.47 470.57 209.03 470.57 drawline
+169.47 465.62 209.03 465.62 drawline
+169.47 460.68 209.03 460.68 drawline
+248.58 495.29 288.14 495.29 drawline
+248.58 490.34 288.14 490.34 drawline
+248.58 485.40 288.14 485.40 drawline
+248.58 480.45 288.14 480.45 drawline
+248.58 475.51 288.14 475.51 drawline
+248.58 470.57 288.14 470.57 drawline
+248.58 465.62 288.14 465.62 drawline
+248.58 460.68 288.14 460.68 drawline
+327.69 495.29 367.25 495.29 drawline
+327.69 490.34 367.25 490.34 drawline
+327.69 485.40 367.25 485.40 drawline
+327.69 480.45 367.25 480.45 drawline
+327.69 475.51 367.25 475.51 drawline
+327.69 470.57 367.25 470.57 drawline
+327.69 465.62 367.25 465.62 drawline
+327.69 460.68 367.25 460.68 drawline
+406.80 495.29 446.36 495.29 drawline
+406.80 490.34 446.36 490.34 drawline
+406.80 485.40 446.36 485.40 drawline
+406.80 480.45 446.36 480.45 drawline
+406.80 475.51 446.36 475.51 drawline
+406.80 470.57 446.36 470.57 drawline
+406.80 465.62 446.36 465.62 drawline
+406.80 460.68 446.36 460.68 drawline
+169.47 574.40 209.03 574.40 drawline
+169.47 569.45 209.03 569.45 drawline
+169.47 564.51 209.03 564.51 drawline
+169.47 559.57 209.03 559.57 drawline
+169.47 554.62 209.03 554.62 drawline
+169.47 549.68 209.03 549.68 drawline
+169.47 544.73 209.03 544.73 drawline
+169.47 539.79 209.03 539.79 drawline
+248.58 574.40 288.14 574.40 drawline
+248.58 569.45 288.14 569.45 drawline
+248.58 564.51 288.14 564.51 drawline
+248.58 559.57 288.14 559.57 drawline
+248.58 554.62 288.14 554.62 drawline
+248.58 549.68 288.14 549.68 drawline
+248.58 544.73 288.14 544.73 drawline
+248.58 539.79 288.14 539.79 drawline
+327.69 574.40 367.25 574.40 drawline
+327.69 569.45 367.25 569.45 drawline
+327.69 564.51 367.25 564.51 drawline
+327.69 559.57 367.25 559.57 drawline
+327.69 554.62 367.25 554.62 drawline
+327.69 549.68 367.25 549.68 drawline
+327.69 544.73 367.25 544.73 drawline
+327.69 539.79 367.25 539.79 drawline
+406.80 574.40 446.36 574.40 drawline
+406.80 569.45 446.36 569.45 drawline
+406.80 564.51 446.36 564.51 drawline
+406.80 559.57 446.36 559.57 drawline
+406.80 554.62 446.36 554.62 drawline
+406.80 549.68 446.36 549.68 drawline
+406.80 544.73 446.36 544.73 drawline
+406.80 539.79 446.36 539.79 drawline
+164.53 260.43 164.53 299.98 drawline
+159.58 260.43 159.58 299.98 drawline
+154.64 260.43 154.64 299.98 drawline
+149.69 260.43 149.69 299.98 drawline
+144.75 260.43 144.75 299.98 drawline
+139.80 260.43 139.80 299.98 drawline
+134.86 260.43 134.86 299.98 drawline
+129.91 260.43 129.91 299.98 drawline
+164.53 339.54 164.53 379.09 drawline
+159.58 339.54 159.58 379.09 drawline
+154.64 339.54 154.64 379.09 drawline
+149.69 339.54 149.69 379.09 drawline
+144.75 339.54 144.75 379.09 drawline
+139.80 339.54 139.80 379.09 drawline
+134.86 339.54 134.86 379.09 drawline
+129.91 339.54 129.91 379.09 drawline
+164.53 418.65 164.53 458.20 drawline
+159.58 418.65 159.58 458.20 drawline
+154.64 418.65 154.64 458.20 drawline
+149.69 418.65 149.69 458.20 drawline
+144.75 418.65 144.75 458.20 drawline
+139.80 418.65 139.80 458.20 drawline
+134.86 418.65 134.86 458.20 drawline
+129.91 418.65 129.91 458.20 drawline
+164.53 497.76 164.53 537.32 drawline
+159.58 497.76 159.58 537.32 drawline
+154.64 497.76 154.64 537.32 drawline
+149.69 497.76 149.69 537.32 drawline
+144.75 497.76 144.75 537.32 drawline
+139.80 497.76 139.80 537.32 drawline
+134.86 497.76 134.86 537.32 drawline
+129.91 497.76 129.91 537.32 drawline
+246.11 260.43 246.11 299.98 drawline
+241.16 260.43 241.16 299.98 drawline
+236.22 260.43 236.22 299.98 drawline
+231.28 260.43 231.28 299.98 drawline
+226.33 260.43 226.33 299.98 drawline
+221.39 260.43 221.39 299.98 drawline
+216.44 260.43 216.44 299.98 drawline
+211.50 260.43 211.50 299.98 drawline
+246.11 339.54 246.11 379.09 drawline
+241.16 339.54 241.16 379.09 drawline
+236.22 339.54 236.22 379.09 drawline
+231.28 339.54 231.28 379.09 drawline
+226.33 339.54 226.33 379.09 drawline
+221.39 339.54 221.39 379.09 drawline
+216.44 339.54 216.44 379.09 drawline
+211.50 339.54 211.50 379.09 drawline
+246.11 418.65 246.11 458.20 drawline
+241.16 418.65 241.16 458.20 drawline
+236.22 418.65 236.22 458.20 drawline
+231.28 418.65 231.28 458.20 drawline
+226.33 418.65 226.33 458.20 drawline
+221.39 418.65 221.39 458.20 drawline
+216.44 418.65 216.44 458.20 drawline
+211.50 418.65 211.50 458.20 drawline
+246.11 497.76 246.11 537.32 drawline
+241.16 497.76 241.16 537.32 drawline
+236.22 497.76 236.22 537.32 drawline
+231.28 497.76 231.28 537.32 drawline
+226.33 497.76 226.33 537.32 drawline
+221.39 497.76 221.39 537.32 drawline
+216.44 497.76 216.44 537.32 drawline
+211.50 497.76 211.50 537.32 drawline
+325.22 260.43 325.22 299.98 drawline
+320.28 260.43 320.28 299.98 drawline
+315.33 260.43 315.33 299.98 drawline
+310.39 260.43 310.39 299.98 drawline
+305.44 260.43 305.44 299.98 drawline
+300.50 260.43 300.50 299.98 drawline
+295.55 260.43 295.55 299.98 drawline
+290.61 260.43 290.61 299.98 drawline
+325.22 339.54 325.22 379.09 drawline
+320.28 339.54 320.28 379.09 drawline
+315.33 339.54 315.33 379.09 drawline
+310.39 339.54 310.39 379.09 drawline
+305.44 339.54 305.44 379.09 drawline
+300.50 339.54 300.50 379.09 drawline
+295.55 339.54 295.55 379.09 drawline
+290.61 339.54 290.61 379.09 drawline
+325.22 418.65 325.22 458.20 drawline
+320.28 418.65 320.28 458.20 drawline
+315.33 418.65 315.33 458.20 drawline
+310.39 418.65 310.39 458.20 drawline
+305.44 418.65 305.44 458.20 drawline
+300.50 418.65 300.50 458.20 drawline
+295.55 418.65 295.55 458.20 drawline
+290.61 418.65 290.61 458.20 drawline
+325.22 497.76 325.22 537.32 drawline
+320.28 497.76 320.28 537.32 drawline
+315.33 497.76 315.33 537.32 drawline
+310.39 497.76 310.39 537.32 drawline
+305.44 497.76 305.44 537.32 drawline
+300.50 497.76 300.50 537.32 drawline
+295.55 497.76 295.55 537.32 drawline
+290.61 497.76 290.61 537.32 drawline
+404.33 260.43 404.33 299.98 drawline
+399.39 260.43 399.39 299.98 drawline
+394.44 260.43 394.44 299.98 drawline
+389.50 260.43 389.50 299.98 drawline
+384.55 260.43 384.55 299.98 drawline
+379.61 260.43 379.61 299.98 drawline
+374.66 260.43 374.66 299.98 drawline
+369.72 260.43 369.72 299.98 drawline
+404.33 339.54 404.33 379.09 drawline
+399.39 339.54 399.39 379.09 drawline
+394.44 339.54 394.44 379.09 drawline
+389.50 339.54 389.50 379.09 drawline
+384.55 339.54 384.55 379.09 drawline
+379.61 339.54 379.61 379.09 drawline
+374.66 339.54 374.66 379.09 drawline
+369.72 339.54 369.72 379.09 drawline
+404.33 418.65 404.33 458.20 drawline
+399.39 418.65 399.39 458.20 drawline
+394.44 418.65 394.44 458.20 drawline
+389.50 418.65 389.50 458.20 drawline
+384.55 418.65 384.55 458.20 drawline
+379.61 418.65 379.61 458.20 drawline
+374.66 418.65 374.66 458.20 drawline
+369.72 418.65 369.72 458.20 drawline
+404.33 497.76 404.33 537.32 drawline
+399.39 497.76 399.39 537.32 drawline
+394.44 497.76 394.44 537.32 drawline
+389.50 497.76 389.50 537.32 drawline
+384.55 497.76 384.55 537.32 drawline
+379.61 497.76 379.61 537.32 drawline
+374.66 497.76 374.66 537.32 drawline
+369.72 497.76 369.72 537.32 drawline
+483.44 260.43 483.44 299.98 drawline
+478.50 260.43 478.50 299.98 drawline
+473.55 260.43 473.55 299.98 drawline
+468.61 260.43 468.61 299.98 drawline
+463.66 260.43 463.66 299.98 drawline
+458.72 260.43 458.72 299.98 drawline
+453.77 260.43 453.77 299.98 drawline
+448.83 260.43 448.83 299.98 drawline
+483.44 339.54 483.44 379.09 drawline
+478.50 339.54 478.50 379.09 drawline
+473.55 339.54 473.55 379.09 drawline
+468.61 339.54 468.61 379.09 drawline
+463.66 339.54 463.66 379.09 drawline
+458.72 339.54 458.72 379.09 drawline
+453.77 339.54 453.77 379.09 drawline
+448.83 339.54 448.83 379.09 drawline
+483.44 418.65 483.44 458.20 drawline
+478.50 418.65 478.50 458.20 drawline
+473.55 418.65 473.55 458.20 drawline
+468.61 418.65 468.61 458.20 drawline
+463.66 418.65 463.66 458.20 drawline
+458.72 418.65 458.72 458.20 drawline
+453.77 418.65 453.77 458.20 drawline
+448.83 418.65 448.83 458.20 drawline
+483.44 497.76 483.44 537.32 drawline
+478.50 497.76 478.50 537.32 drawline
+473.55 497.76 473.55 537.32 drawline
+468.61 497.76 468.61 537.32 drawline
+463.66 497.76 463.66 537.32 drawline
+458.72 497.76 458.72 537.32 drawline
+453.77 497.76 453.77 537.32 drawline
+448.83 497.76 448.83 537.32 drawline
+green
+290.61 339.54 290.61 379.09 drawline
+290.61 339.54 290.61 379.09 drawline
+374.66 339.54 374.66 379.09 drawline
+374.66 339.54 374.66 379.09 drawline
+367.25 386.51 374.66 379.09 drawline
+327.69 386.51 367.25 386.51 drawline
+288.14 386.51 327.69 386.51 drawline
+248.58 386.51 288.14 386.51 drawline
+211.50 497.76 211.50 537.32 drawline
+211.50 497.76 211.50 537.32 drawline
+211.50 458.20 211.50 497.76 drawline
+211.50 418.65 211.50 458.20 drawline
+211.50 379.09 211.50 418.65 drawline
+211.50 339.54 211.50 379.09 drawline
+248.58 302.45 211.50 339.54 drawline
+248.58 302.45 288.14 302.45 drawline
+369.72 260.43 369.72 299.98 drawline
+369.72 260.43 369.72 299.98 drawline
+367.25 225.82 369.72 260.43 drawline
+327.69 225.82 367.25 225.82 drawline
+295.55 260.43 327.69 225.82 drawline
+295.55 260.43 295.55 299.98 drawline
+295.55 260.43 295.55 299.98 drawline
+295.55 260.43 295.55 299.98 drawline
+288.14 307.40 295.55 299.98 drawline
+248.58 307.40 288.14 307.40 drawline
+221.39 418.65 221.39 458.20 drawline
+221.39 418.65 221.39 458.20 drawline
+221.39 379.09 221.39 418.65 drawline
+221.39 339.54 221.39 379.09 drawline
+221.39 299.98 221.39 339.54 drawline
+221.39 260.43 221.39 299.98 drawline
+248.58 230.76 221.39 260.43 drawline
+248.58 230.76 288.14 230.76 drawline
+129.91 497.76 129.91 537.32 drawline
+129.91 497.76 129.91 537.32 drawline
+169.47 460.68 129.91 497.76 drawline
+169.47 460.68 209.03 460.68 drawline
+248.58 460.68 209.03 460.68 drawline
+248.58 460.68 288.14 460.68 drawline
+327.69 460.68 288.14 460.68 drawline
+327.69 460.68 367.25 460.68 drawline
+406.80 460.68 367.25 460.68 drawline
+406.80 460.68 446.36 460.68 drawline
+448.83 458.20 446.36 460.68 drawline
+448.83 418.65 448.83 458.20 drawline
+144.75 418.65 144.75 458.20 drawline
+144.75 418.65 144.75 458.20 drawline
+169.47 470.57 144.75 458.20 drawline
+169.47 470.57 209.03 470.57 drawline
+248.58 470.57 209.03 470.57 drawline
+248.58 470.57 288.14 470.57 drawline
+327.69 470.57 288.14 470.57 drawline
+327.69 470.57 367.25 470.57 drawline
+406.80 470.57 367.25 470.57 drawline
+406.80 470.57 446.36 470.57 drawline
+290.61 418.65 290.61 458.20 drawline
+290.61 418.65 290.61 458.20 drawline
+327.69 381.57 290.61 418.65 drawline
+327.69 381.57 367.25 381.57 drawline
+406.80 381.57 367.25 381.57 drawline
+406.80 381.57 446.36 381.57 drawline
+211.50 339.54 211.50 379.09 drawline
+211.50 339.54 211.50 379.09 drawline
+216.44 260.43 216.44 299.98 drawline
+216.44 260.43 216.44 299.98 drawline
+216.44 299.98 216.44 339.54 drawline
+216.44 339.54 216.44 379.09 drawline
+209.03 386.51 216.44 379.09 drawline
+169.47 386.51 209.03 386.51 drawline
+379.61 418.65 379.61 458.20 drawline
+379.61 418.65 379.61 458.20 drawline
+379.61 379.09 379.61 418.65 drawline
+379.61 339.54 379.61 379.09 drawline
+367.25 317.29 379.61 339.54 drawline
+327.69 317.29 367.25 317.29 drawline
+288.14 317.29 327.69 317.29 drawline
+248.58 317.29 288.14 317.29 drawline
+209.03 317.29 248.58 317.29 drawline
+169.47 317.29 209.03 317.29 drawline
+showpage
+
+%%Trailer
