@@ -39,7 +39,7 @@ ifeq ($(PLATFORM),X11)
 endif
 
 $(EXE): graphics.o lab.o
-	g++ $(FLAGS) $^ $(QUARTZ_LIBS) $(GRAPHICS_LIBS) -o $(EXE)
+	scl enable devtoolset-2 'g++ $(FLAGS) $^ $(QUARTZ_LIBS) $(GRAPHICS_LIBS) -o $(EXE)'
 
 test:
 	g++ test.cpp -o test
@@ -48,7 +48,7 @@ test:
 # $< evaluates to the name of the _first_ dependency (the .cpp file in this case)
 # $@ evaluates to the name of the target (the .o file in this case)
 %.o: %.cpp $(HDR) 
-	g++ -c $(FLAGS) $(QUARTZ_LIBS) $< -o $@
+	scl enable devtoolset-2 'g++ -c $(FLAGS) $(QUARTZ_LIBS) $< -o $@'
 
 # graphics.o: graphics.cpp $(HDR)
 # 	g++ -c $(FLAGS) graphics.cpp
