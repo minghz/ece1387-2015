@@ -98,6 +98,9 @@ dist: umfpack_di_demo.c umfpack_dl_demo.c umfpack_zi_demo.c umfpack_zl_demo.c
 umfpack_simple: umfpack_simple.c $(INC) $(UMFPACK)
 	$(C) -o umfpack_simple umfpack_simple.c $(UMFPACK) $(LIBS)
 
+umfpack_simple_o: umfpack_simple.c $(INC) $(UMFPACK)
+	$(C) -c -o umfpack_simple.o umfpack_simple.c $(UMFPACK) $(LIBS)
+
 # the GNU rules are simpler:
 # umfpack_%_demo.c: umfpack_xx_demo.c umfpack_%_demo.sed
 # 	- sed -f umfpack_$*_demo.sed < umfpack_xx_demo.c > umfpack_$*_demo.c
