@@ -86,10 +86,18 @@ class Net{
 
     void add_block(Block * block);
     void set_tot_blocks();
+    bool has_fake_block();
 };
 
 Net::Net(int n){
   number = n;
+}
+bool Net::has_fake_block(){
+  list<Block*>::iterator it;
+  for(it = block_list.begin(); it != block_list.end(); ++it){
+    if((*it)->is_fake) return true;
+  }
+  return false;
 }
 void Net::add_block(Block * block){
   block_list.push_back(block);
@@ -100,8 +108,47 @@ void Net::set_tot_blocks(){
     counter ++;
   }
   tot_blocks = counter;
-  cout <<"total blocks"<<counter<<"netnumb"<<number<<endl;
-  
+}
+
+class Coordinates {
+  public:
+    double x;
+    double y;
+
+    //constructor
+    Coordinates();
+    Coordinates(double x_val, double y_val);
+};
+Coordinates::Coordinates(){}
+
+Coordinates::Coordinates(double x_val, double y_val){
+  x = x_val;
+  y = y_val;
+}
+
+class BlockSet{
+  public:
+  list<Block*> block_set;
+  Coordinates low_left;
+  Coordinates up_right;
+
+  BlockSet();
+};
+
+BlockSet::BlockSet(){}
+
+ostream& operator<< (ostream & out, BlockSet const& data){
+  out << "BlockSet= low_left x:"<< data.low_left.x 
+      << " | y:"<< data.low_left.y << " | ";
+  out << "up_right x:"<< data.up_right.x
+      <<" | y:"<< data.up_right.y<< " | ";
+  list<Block*>::const_iterator iterator;
+  for (iterator = data.block_set.begin();
+      iterator != data.block_set.end();
+      ++iterator) {
+    out << (*iterator)->number << ",";
+  }
+  return out;
 }
 
 //printing a Weight object on cout
@@ -109,9 +156,9 @@ ostream& operator<< (ostream & out, Weight const& data) {
 
     out << "Weight= value: " << data.value << " | " ;
     out << "b_1: " << data.b_1->number << " | " ;
-    out << "fixed?: " << data.b_1->is_fixed << " | " ;
+    out << "\t" << data.b_1 << " | " ;
     out << "b_2: " << data.b_2->number << " | " ;
-    out << "fixed?: " << data.b_2->is_fixed << " | " ;
+    out << "\t" << data.b_2 << " | " ;
     return out ;
 }
 
