@@ -331,7 +331,7 @@ void model_clique(Net net, list<Weight> * weight_list){
 
   if(net.tot_blocks == 2){
     double w_val = 1.0;
-    if(net.has_fake_block()) w_val = 20.0;
+    if(net.has_fake_block()) w_val = 2.0;
     (*weight_list).push_back(
         *(new Weight(blocks.front(), blocks.back(), w_val))
         );
@@ -845,15 +845,22 @@ void spread(void){
   double area_q4_y = lower_bound_y + half_distance - quarter_distance;
 
   //add fake blocks
-  add_fake_blocks(area_q1_x, area_q1_y, block_set_q1.block_set);
-  add_fake_blocks(area_q2_x, area_q2_y, block_set_q2.block_set);
-  add_fake_blocks(area_q3_x, area_q3_y, block_set_q3.block_set);
-  add_fake_blocks(area_q4_x, area_q4_y, block_set_q4.block_set);
-
-  block_set_list.push_back(block_set_q1);
-  block_set_list.push_back(block_set_q2);
-  block_set_list.push_back(block_set_q3);
-  block_set_list.push_back(block_set_q4);
+  if(block_set_q1.block_set.size() != 0){
+    add_fake_blocks(area_q1_x, area_q1_y, block_set_q1.block_set);
+    block_set_list.push_back(block_set_q1);
+  }
+  if(block_set_q2.block_set.size() != 0){
+    add_fake_blocks(area_q2_x, area_q2_y, block_set_q2.block_set);
+    block_set_list.push_back(block_set_q2);
+  }
+  if(block_set_q3.block_set.size() != 0){
+    add_fake_blocks(area_q3_x, area_q3_y, block_set_q3.block_set);
+    block_set_list.push_back(block_set_q3);
+  }
+  if(block_set_q4.block_set.size() != 0){
+    add_fake_blocks(area_q4_x, area_q4_y, block_set_q4.block_set);
+    block_set_list.push_back(block_set_q4);
+  }
 
 }
 
