@@ -64,35 +64,6 @@ void parse_circuit_file(string filename);
 //// Callbacks for event-driven window handling.
 void randomize_fixed_blocks(void (*drawscreen_ptr) (void));
 void spread_blocks(void (*drawscreen_ptr) (void));
-//void route_all_button_func (void (*drawscreen_ptr) (void));
-//void route_one_source_sink(void (*drawscreen_ptr) (void));
-//void traceback_button_func(void (*drawscreen_ptr) (void));
-//void find_minimum_w_button_func( void (*drawscreen_ptr) (void));
-//
-////drawing and printing functions
-//void drawscreen (void);
-//void draw_pin(int pin_num, Track* track);
-//void draw_cross(float x, float y);
-//void draw_traceback_routes(void);
-//void print_circuit(Circuit cct);
-//
-////draw dracks onto screen and initialize all_tracks global variable
-//int initialize_tracks(float rectangle_height, float rectangle_width, float wire_space);
-//
-////routing functions
-//void route_all(void);
-//void route_one(SourceSink * route_ptr);
-//Track * expand();
-//Track * traceback_route(Track * target);
-//
-////helper to routing functions
-//Track * get_track(int x, int y, int z, int wire);
-//Track * get_connected_track(Track * origin_track);
-//Track * get_connected_track_from_logic_block(int lb_x, int lb_y, int lb_p, int wire);
-//
-////cleaning lady
-//void clean_routing_memory();
-//void clear_labels();
 
 /* 
  ******************* End Functions
@@ -126,9 +97,6 @@ int main(int argc, char* const argv[]) {
 
 	create_button ("Window", "Randomize FB", randomize_fixed_blocks); // name is UTF-8
 	create_button ("Window", "Spread", spread_blocks); // name is UTF-8
-	//create_button ("Window", "Traceback Routes", traceback_button_func); // name is UTF-8
-	//create_button ("Window", "Route All", route_all_button_func); // name is UTF-8
-	//create_button ("Window", "Expand Route", route_one_source_sink); // name is UTF-8
 
 	event_loop(NULL, NULL, NULL, drawscreen);   
 
@@ -254,16 +222,7 @@ void parse_circuit_file(string filename){
  * user friendlyness
  */
 void print_instructions(void){
-    //no arguments provided print instructions
-//    cout <<endl;
-//    cout << "Usage:" <<endl;
-//    cout << "./lab <circuit_file> [-v] [-b | -u]" <<endl;
-//    cout <<endl;
-//    cout << "    <circuit_file> : file containing grid and routing definition"<< endl;
-//    cout << "    -v : verbose"<< endl;
-//    cout << "    -b : bi-directional routing option (default)"<< endl;
-//    cout << "    -u : uni-directional routing option"<< endl;
-//    cout <<endl;
+  //no arguments provided print instructions
 }
 
 bool net_number_exists(list<Net> net_list, int n){
@@ -331,7 +290,7 @@ void model_clique(Net net, list<Weight> * weight_list){
 
   if(net.tot_blocks == 2){
     double w_val = 1.0;
-    if(net.has_fake_block()) w_val = 2.0;
+    if(net.has_fake_block()) w_val = 10.0;
     (*weight_list).push_back(
         *(new Weight(blocks.front(), blocks.back(), w_val))
         );

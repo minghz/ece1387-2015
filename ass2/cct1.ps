@@ -1,0 +1,203 @@
+%!PS-Adobe-1.0
+%%DocumentFonts: Helvetica
+%%Pages: 1
+%%HiResBoundingBox: 36.00 167.53 576.00 609.47
+%%EndComments
+/censhow   %draw a centered string
+ { moveto               % move to proper spot
+   dup stringwidth pop  % get x length of string
+   -2 div               % Proper left start
+   yoff rmoveto         % Move left that much and down half font height
+   show newpath } def   % show the string
+
+/rcenshow  %draw a centered string
+ { rmoveto              % move to proper spot
+   dup stringwidth pop  % get x length of string
+   -2 div               % Proper left start
+   yoff rmoveto         % Move left that much and down half font height
+   show newpath } def   % show the string
+/setfontsize     % set font to desired size and compute centering yoff
+ { /Helvetica findfont
+   exch scalefont
+   setfont         % Font size set ...
+
+   0 0 moveto      % Get vertical centering offset
+   (Xg) true charpath
+   flattenpath pathbbox
+   /ascent exch def pop -1 mul /descent exch def pop
+   newpath
+   descent ascent sub 2 div /yoff exch def } def
+
+% Next two lines for debugging only.
+/str 20 string def
+/pnum {str cvs print (  ) print} def
+/drawline      % draw a line from (x2,y2) to (x1,y1)
+ { moveto lineto stroke } def
+
+/rect          % outline a rectangle 
+ { /y2 exch def /x2 exch def /y1 exch def /x1 exch def
+   x1 y1 moveto
+   x2 y1 lineto
+   x2 y2 lineto
+   x1 y2 lineto
+   closepath } def
+
+/drawrect      % draw outline of a rectanagle
+ { rect stroke } def
+
+/fillrect      % fill in a rectanagle
+ { rect fill } def
+
+/drawarc { arc stroke } def           % draw an arc
+/drawarcn { arcn stroke } def         % draw an arc in the opposite direction
+
+%Fill a counterclockwise or clockwise arc sector, respectively.
+/fillarc { moveto currentpoint 5 2 roll arc closepath fill } def
+/fillarcn { moveto currentpoint 5 2 roll arcn closepath fill } def
+
+/fillpoly { 3 1 roll moveto         % move to first point
+   2 exch 1 exch {pop lineto} for   % line to all other points
+   closepath fill } def
+
+%Color Definitions:
+/white { 1 setgray } def
+/black { 0 setgray } def
+/grey55 { .55 setgray } def
+/grey75 { .75 setgray } def
+/blue { 0 0 1 setrgbcolor } def
+/green { 0 1 0 setrgbcolor } def
+/yellow { 1 1 0 setrgbcolor } def
+/cyan { 0 1 1 setrgbcolor } def
+/red { 1 0 0 setrgbcolor } def
+/pink { 1 0.75 0.8 setrgbcolor } def
+/lightpink { 1 0.71 0.76 setrgbcolor } def
+/darkgreen { 0 0.5 0 setrgbcolor } def
+/magenta { 1 0 1 setrgbcolor } def
+/bisque { 1 0.89 0.77 setrgbcolor } def
+/lightskyblue { 0.53 0.81 0.98 setrgbcolor } def
+/thistle { 0.85 0.75 0.85 setrgbcolor } def
+/plum { 0.87 0.63 0.87 setrgbcolor } def
+/khaki { 0.94 0.9 0.55 setrgbcolor } def
+/coral { 1 0.5 0.31 setrgbcolor } def
+/turquoise { 0.25 0.88 0.82 setrgbcolor } def
+/mediumpurple { 0.58 0.44 0.86 setrgbcolor } def
+/darkslateblue { 0.28 0.24 0.55 setrgbcolor } def
+/darkkhaki { 0.74 0.72 0.42 setrgbcolor } def
+/lightmediumblue { 0.33 0.33 1.00 setrgbcolor } def
+/saddlebrown { 0.55 0.27 0.07 setrgbcolor } def
+/firebrick { 0.70 0.13 0.13 setrgbcolor } def
+/limegreen { 0.20 0.80 0.20 setrgbcolor } def
+
+%Solid and dashed line definitions:
+/linesolid {[] 0 setdash} def
+/linedashed {[3 3] 0 setdash} def
+
+%%EndProlog
+%%Page: 1 1
+
+red
+linesolid
+1 setlinewidth
+15 setfontsize
+black
+9 setfontsize
+(Assignment 2 - 2015) 306.00 174.53 censhow
+red
+15 setfontsize
+36.00 182.53 576.00 609.47 rect clip newpath
+
+white
+clippath fill
+
+red
+blue
+306.00 182.53 306.00 609.47 drawline
+306.00 182.53 92.53 396.00 drawline
+92.53 396.00 239.71 408.47 drawline
+92.53 396.00 218.69 406.69 drawline
+323.82 415.60 239.71 408.47 drawline
+323.82 415.60 401.51 458.37 drawline
+323.82 415.60 519.47 396.00 drawline
+323.82 415.60 218.69 406.69 drawline
+353.76 533.92 401.51 458.37 drawline
+353.76 533.92 306.00 609.47 drawline
+239.71 408.47 218.69 406.69 drawline
+401.51 458.37 408.99 487.95 drawline
+401.51 458.37 519.47 396.00 drawline
+408.99 487.95 519.47 396.00 drawline
+408.99 487.95 306.00 609.47 drawline
+306.00 609.47 519.47 396.00 drawline
+red
+303.87 180.39 308.13 184.66 drawrect
+gsave
+306.00 182.53 moveto
+0.8 0.8 scale
+0 rotate
+(1) 0 0 rcenshow
+grestore
+90.39 393.87 94.66 398.13 drawrect
+gsave
+92.53 396.00 moveto
+0.8 0.8 scale
+0 rotate
+(2) 0 0 rcenshow
+grestore
+321.68 413.47 325.95 417.74 drawrect
+gsave
+323.82 415.60 moveto
+0.8 0.8 scale
+0 rotate
+(3) 0 0 rcenshow
+grestore
+351.62 531.79 355.89 536.06 drawrect
+gsave
+353.76 533.92 moveto
+0.8 0.8 scale
+0 rotate
+(4) 0 0 rcenshow
+grestore
+237.58 406.34 241.85 410.61 drawrect
+gsave
+239.71 408.47 moveto
+0.8 0.8 scale
+0 rotate
+(5) 0 0 rcenshow
+grestore
+399.38 456.23 403.65 460.50 drawrect
+gsave
+401.51 458.37 moveto
+0.8 0.8 scale
+0 rotate
+(6) 0 0 rcenshow
+grestore
+216.55 404.56 220.82 408.83 drawrect
+gsave
+218.69 406.69 moveto
+0.8 0.8 scale
+0 rotate
+(7) 0 0 rcenshow
+grestore
+406.86 485.81 411.13 490.08 drawrect
+gsave
+408.99 487.95 moveto
+0.8 0.8 scale
+0 rotate
+(8) 0 0 rcenshow
+grestore
+303.87 607.34 308.13 611.61 drawrect
+gsave
+306.00 609.47 moveto
+0.8 0.8 scale
+0 rotate
+(9) 0 0 rcenshow
+grestore
+517.34 393.87 521.61 398.13 drawrect
+gsave
+519.47 396.00 moveto
+0.8 0.8 scale
+0 rotate
+(10) 0 0 rcenshow
+grestore
+showpage
+
+%%Trailer
