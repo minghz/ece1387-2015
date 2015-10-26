@@ -90,8 +90,8 @@ F77FLAGS = $(FFLAGS) -O
 F77LIB =
 
 # C and Fortran libraries.  Remove -lrt if you don't have it.
-# LIB = -lm -lrt
-LIB = -lm
+LIB = -lm -lrt
+#LIB = -lm
 
 # Using the following requires CF = ... -DNTIMER on POSIX C systems.
 # LIB = -lm
@@ -133,7 +133,7 @@ INSTALL_INCLUDE = /usr/local/include
 # LAPACK =
 
 # OpenBLAS
-  BLAS = -lopenblas
+#  BLAS = -lopenblas
 # LAPACK = 
 
 # NOTE: this next option for the "Goto BLAS" has nothing to do with a "goto"
