@@ -1,0 +1,15 @@
+#To build:
+
+>make
+
+#To run program:
+
+>./lab [cct1 | cct2 | cct3]
+
+#line 293 sets the weight of the fake block pull
+    if(net.has_fake_block()) w_val = 10.0;
+    
+Buttons: 
+
+  Spread -> spreads the next block set
+  Randomize -> randomizes fixed blocks

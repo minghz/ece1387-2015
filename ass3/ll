@@ -1,0 +1,163 @@
+Parsing cct File cct2
+1 32 13 45 30 21 36 6 27 50 -1
+2 10 9 33 50 27 30 -1
+3 13 7 2 40 45 32 -1
+4 16 40 18 23 38 19 -1
+5 21 9 38 50 33 4 17 7 31 20 37 8 47 11 -1
+6 33 13 16 6 7 20 5 43 -1
+7 44 19 8 39 14 12 -1
+8 45 33 6 20 39 42 21 47 24 25 -1
+9 4 3 18 2 30 48 16 37 15 39 45 7 25 -1
+10 47 33 12 48 46 44 21 37 24 15 10 -1
+11 34 9 36 49 50 6 4 33 11 -1
+12 26 34 29 10 22 15 7 27 31 17 9 18 44 2 -1
+13 10 6 33 29 14 18 42 40 47 -1
+14 36 25 37 19 7 44 -1
+15 27 26 44 11 1 50 14 34 17 18 28 49 -1
+16 1 44 40 45 9 38 26 7 -1
+17 13 12 11 44 39 17 49 45 -1
+18 34 41 33 47 9 23 29 32 28 24 8 -1
+19 17 5 46 30 11 14 33 44 26 8 42 -1
+20 16 25 28 31 5 7 35 19 8 9 11 -1
+21 14 22 6 26 36 3 27 -1
+22 19 12 11 29 18 23 39 28 -1
+23 8 32 18 38 11 2 31 23 13 10 3 22 -1
+24 5 37 25 1 40 18 -1
+25 39 11 47 6 25 17 36 16 10 37 -1
+26 35 41 43 -1
+-1
+Finished parsing
+Net= number: 32|tot_blocks: 4|block_list_num: 1,3,18,23, | 
+Net= number: 13|tot_blocks: 5|block_list_num: 1,3,6,17,23, | 
+Net= number: 45|tot_blocks: 6|block_list_num: 1,3,8,9,16,17, | 
+Net= number: 30|tot_blocks: 4|block_list_num: 1,2,9,19, | 
+Net= number: 21|tot_blocks: 4|block_list_num: 1,5,8,10, | 
+Net= number: 36|tot_blocks: 5|block_list_num: 1,11,14,21,25, | 
+Net= number: 6|tot_blocks: 7|block_list_num: 1,6,8,11,13,21,25, | 
+Net= number: 27|tot_blocks: 5|block_list_num: 1,2,12,15,21, | 
+Net= number: 50|tot_blocks: 5|block_list_num: 1,2,5,11,15, | 
+Net= number: 10|tot_blocks: 6|block_list_num: 2,10,12,13,23,25, | 
+Net= number: 9|tot_blocks: 7|block_list_num: 2,5,11,12,16,18,20, | 
+Net= number: 33|tot_blocks: 9|block_list_num: 2,5,6,8,10,11,13,18,19, | 
+Net= number: 7|tot_blocks: 8|block_list_num: 3,5,6,9,12,14,16,20, | 
+Net= number: 2|tot_blocks: 4|block_list_num: 3,9,12,23, | 
+Net= number: 40|tot_blocks: 5|block_list_num: 3,4,13,16,24, | 
+Net= number: 16|tot_blocks: 5|block_list_num: 4,6,9,20,25, | 
+Net= number: 18|tot_blocks: 8|block_list_num: 4,9,12,13,15,22,23,24, | 
+Net= number: 23|tot_blocks: 4|block_list_num: 4,18,22,23, | 
+Net= number: 38|tot_blocks: 4|block_list_num: 4,5,16,23, | 
+Net= number: 19|tot_blocks: 5|block_list_num: 4,7,14,20,22, | 
+Net= number: 4|tot_blocks: 3|block_list_num: 5,9,11, | 
+Net= number: 17|tot_blocks: 6|block_list_num: 5,12,15,17,19,25, | 
+Net= number: 31|tot_blocks: 4|block_list_num: 5,12,20,23, | 
+Net= number: 20|tot_blocks: 3|block_list_num: 5,6,8, | 
+Net= number: 37|tot_blocks: 6|block_list_num: 5,9,10,14,24,25, | 
+Net= number: 8|tot_blocks: 6|block_list_num: 5,7,18,19,20,23, | 
+Net= number: 47|tot_blocks: 6|block_list_num: 5,8,10,13,18,25, | 
+Net= number: 11|tot_blocks: 9|block_list_num: 5,11,15,17,19,20,22,23,25, | 
+Net= number: 5|tot_blocks: 4|block_list_num: 6,19,20,24, | 
+Net= number: 43|tot_blocks: 2|block_list_num: 6,26, | 
+Net= number: 44|tot_blocks: 8|block_list_num: 7,10,12,14,15,16,17,19, | 
+Net= number: 39|tot_blocks: 6|block_list_num: 7,8,9,17,22,25, | 
+Net= number: 14|tot_blocks: 5|block_list_num: 7,13,15,19,21, | 
+Net= number: 12|tot_blocks: 4|block_list_num: 7,10,17,22, | 
+Net= number: 42|tot_blocks: 3|block_list_num: 8,13,19, | 
+Net= number: 24|tot_blocks: 3|block_list_num: 8,10,18, | 
+Net= number: 25|tot_blocks: 6|block_list_num: 8,9,14,20,24,25, | 
+Net= number: 3|tot_blocks: 3|block_list_num: 9,21,23, | 
+Net= number: 48|tot_blocks: 2|block_list_num: 9,10, | 
+Net= number: 15|tot_blocks: 3|block_list_num: 9,10,12, | 
+Net= number: 46|tot_blocks: 2|block_list_num: 10,19, | 
+Net= number: 34|tot_blocks: 4|block_list_num: 11,12,15,18, | 
+Net= number: 49|tot_blocks: 3|block_list_num: 11,15,17, | 
+Net= number: 26|tot_blocks: 5|block_list_num: 12,15,16,19,21, | 
+Net= number: 29|tot_blocks: 4|block_list_num: 12,13,18,22, | 
+Net= number: 22|tot_blocks: 3|block_list_num: 12,21,23, | 
+Net= number: 1|tot_blocks: 3|block_list_num: 15,16,24, | 
+Net= number: 28|tot_blocks: 4|block_list_num: 15,18,20,22, | 
+Net= number: 41|tot_blocks: 2|block_list_num: 18,26, | 
+Net= number: 35|tot_blocks: 2|block_list_num: 20,26, | 
+Block= number: 1|fanout: 9|net_list_num: 32,13,45,30,21,36,6,27,50, | 
+Block= number: 2|fanout: 6|net_list_num: 10,9,33,50,27,30, | 
+Block= number: 3|fanout: 6|net_list_num: 13,7,2,40,45,32, | 
+Block= number: 4|fanout: 6|net_list_num: 16,40,18,23,38,19, | 
+Block= number: 5|fanout: 14|net_list_num: 21,9,38,50,33,4,17,7,31,20,37,8,47,11, | 
+Block= number: 6|fanout: 8|net_list_num: 33,13,16,6,7,20,5,43, | 
+Block= number: 7|fanout: 6|net_list_num: 44,19,8,39,14,12, | 
+Block= number: 8|fanout: 10|net_list_num: 45,33,6,20,39,42,21,47,24,25, | 
+Block= number: 9|fanout: 13|net_list_num: 4,3,18,2,30,48,16,37,15,39,45,7,25, | 
+Block= number: 10|fanout: 11|net_list_num: 47,33,12,48,46,44,21,37,24,15,10, | 
+Block= number: 11|fanout: 9|net_list_num: 34,9,36,49,50,6,4,33,11, | 
+Block= number: 12|fanout: 14|net_list_num: 26,34,29,10,22,15,7,27,31,17,9,18,44,2, | 
+Block= number: 13|fanout: 9|net_list_num: 10,6,33,29,14,18,42,40,47, | 
+Block= number: 14|fanout: 6|net_list_num: 36,25,37,19,7,44, | 
+Block= number: 15|fanout: 12|net_list_num: 27,26,44,11,1,50,14,34,17,18,28,49, | 
+Block= number: 16|fanout: 8|net_list_num: 1,44,40,45,9,38,26,7, | 
+Block= number: 17|fanout: 8|net_list_num: 13,12,11,44,39,17,49,45, | 
+Block= number: 18|fanout: 11|net_list_num: 34,41,33,47,9,23,29,32,28,24,8, | 
+Block= number: 19|fanout: 11|net_list_num: 17,5,46,30,11,14,33,44,26,8,42, | 
+Block= number: 20|fanout: 11|net_list_num: 16,25,28,31,5,7,35,19,8,9,11, | 
+Block= number: 21|fanout: 7|net_list_num: 14,22,6,26,36,3,27, | 
+Block= number: 22|fanout: 8|net_list_num: 19,12,11,29,18,23,39,28, | 
+Block= number: 23|fanout: 12|net_list_num: 8,32,18,38,11,2,31,23,13,10,3,22, | 
+Block= number: 24|fanout: 6|net_list_num: 5,37,25,1,40,18, | 
+Block= number: 25|fanout: 10|net_list_num: 39,11,47,6,25,17,36,16,10,37, | 
+Block= number: 26|fanout: 3|net_list_num: 35,41,43, | 
+balance 13
+right side 1
+right side 3
+right side 18
+right side 23
+right side 6
+right side 17
+right side 8
+right side 9
+right side 16
+right side 2
+right side 19
+right side 5
+right side 10
+left side 11
+left side 14
+left side 21
+left side 25
+left side 13
+left side 12
+left side 15
+left side 20
+left side 4
+left side 24
+left side 22
+left side 7
+left side 26
+initial cost 39
+Block= number: 5|fanout: 14|net_list_num: 21,9,38,50,33,4,17,7,31,20,37,8,47,11, | 
+Block= number: 12|fanout: 14|net_list_num: 26,34,29,10,22,15,7,27,31,17,9,18,44,2, | 
+Block= number: 9|fanout: 13|net_list_num: 4,3,18,2,30,48,16,37,15,39,45,7,25, | 
+Block= number: 15|fanout: 12|net_list_num: 27,26,44,11,1,50,14,34,17,18,28,49, | 
+Block= number: 23|fanout: 12|net_list_num: 8,32,18,38,11,2,31,23,13,10,3,22, | 
+Block= number: 10|fanout: 11|net_list_num: 47,33,12,48,46,44,21,37,24,15,10, | 
+Block= number: 18|fanout: 11|net_list_num: 34,41,33,47,9,23,29,32,28,24,8, | 
+Block= number: 19|fanout: 11|net_list_num: 17,5,46,30,11,14,33,44,26,8,42, | 
+Block= number: 20|fanout: 11|net_list_num: 16,25,28,31,5,7,35,19,8,9,11, | 
+Block= number: 8|fanout: 10|net_list_num: 45,33,6,20,39,42,21,47,24,25, | 
+Block= number: 25|fanout: 10|net_list_num: 39,11,47,6,25,17,36,16,10,37, | 
+Block= number: 1|fanout: 9|net_list_num: 32,13,45,30,21,36,6,27,50, | 
+Block= number: 11|fanout: 9|net_list_num: 34,9,36,49,50,6,4,33,11, | 
+Block= number: 13|fanout: 9|net_list_num: 10,6,33,29,14,18,42,40,47, | 
+Block= number: 6|fanout: 8|net_list_num: 33,13,16,6,7,20,5,43, | 
+Block= number: 16|fanout: 8|net_list_num: 1,44,40,45,9,38,26,7, | 
+Block= number: 17|fanout: 8|net_list_num: 13,12,11,44,39,17,49,45, | 
+Block= number: 22|fanout: 8|net_list_num: 19,12,11,29,18,23,39,28, | 
+Block= number: 21|fanout: 7|net_list_num: 14,22,6,26,36,3,27, | 
+Block= number: 2|fanout: 6|net_list_num: 10,9,33,50,27,30, | 
+Block= number: 3|fanout: 6|net_list_num: 13,7,2,40,45,32, | 
+Block= number: 4|fanout: 6|net_list_num: 16,40,18,23,38,19, | 
+Block= number: 7|fanout: 6|net_list_num: 44,19,8,39,14,12, | 
+Block= number: 14|fanout: 6|net_list_num: 36,25,37,19,7,44, | 
+Block= number: 24|fanout: 6|net_list_num: 5,37,25,1,40,18, | 
+Block= number: 26|fanout: 3|net_list_num: 35,41,43, | 
+
+Best Cost: 39
+Seconds Elapsed: 0.416352
+Nodes Visited: 19377
