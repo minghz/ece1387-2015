@@ -2,6 +2,7 @@
 #include <cfloat> // for FLT_MAX
 #include <chrono>
 #include <thread>
+#include <future>
 #include <cstdlib>
 #include <vector>
 #include <list>
@@ -19,7 +20,7 @@ using namespace boost;
 /*
  ******************* Constants
  */
-bool debug_mode = true;
+bool debug_mode = false;
 int balance; //tot ntot num blocks / 2
 int best_cost;
 Node* best_leaf = NULL;
@@ -27,6 +28,11 @@ int nodes_visited = 0;
 list<Block> block_list;
 list<Net> net_list;
 Node* root  = NULL;//root of our tree
+list<thread> all_threads;
+mutex best_cost_lock; 
+mutex thread_size_lock;
+
+bool thread_mode = false;
 
 void drawscreen (void);
 const t_bound_box initial_coords = t_bound_box(-500,1000,500,0); 
@@ -43,7 +49,7 @@ void print_block_list(list<Block> block_list);
 void print_int_array(int arr[], int size);
 void print_double_array(double arr[], int size);
 void print_best_result(Node* best_leaf);
-
+string parse_input(int ac, char* const av[]);
 
 bool has_block(list<Block*> bl, Block* b);
 bool has_cross_block(list<Block*> bl, list<Block*> rB, list<Block*> lB);
@@ -55,7 +61,7 @@ int count_non_fixed_blocks(list<Block> block_list);
 int get_balance(Node* node);
 int get_lower_bound(Node * node);
 
-void traverse_tree(Node* node, list<Block>::iterator b_it);
+bool traverse_tree(Node* node, list<Block>::iterator b_it);
 void draw_tree(Node * node, t_point position, int curr_block, int num_blocks);
 
 //pamper argc and argv[]
@@ -77,7 +83,10 @@ void spread_blocks(void (*drawscreen_ptr) (void));
  */
 int main(int argc, char* const argv[]) {
 
-  string cct_file_name = argv[1];
+
+  
+
+  string cct_file_name = parse_input (argc, argv);
 	
   std::cout << "Parsing cct File " << cct_file_name << endl;
   parse_circuit_file(cct_file_name);
@@ -127,9 +136,9 @@ int main(int argc, char* const argv[]) {
     }
   }
 
-  best_cost = cut_count;
+  //best_cost = cut_count;
   //SABOTAGE!!!
-  //best_cost = 1000;
+  best_cost = 1000;
   if (debug_mode) cout << "initial cost " << best_cost << endl;
 
   //step3: create bounding function that can be applied to any node
@@ -155,7 +164,19 @@ int main(int argc, char* const argv[]) {
   root->is_root = true;
 
   clock_t begin = clock();
-  traverse_tree(root, b_it);
+  if(thread_mode){
+    std::future<bool> main_finished = std::async(traverse_tree, root, b_it);
+    //main_finished.get();
+    //all_threads.push_back(thread(traverse_tree, root, b_it));
+
+   // list<thread>::iterator ti;
+   // for(ti = all_threads.begin(); ti !=all_threads.end(); ++ti){
+   //   (*ti).join();
+   // }
+  } else {
+    traverse_tree(root, b_it);
+  }
+
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
@@ -270,6 +291,43 @@ void print_instructions(void){
   //no arguments provided print instructions
 }
 
+string parse_input(int ac, char* const av[]){
+
+  string cct_file_name = "";
+  if(ac > 4 || ac == 1){
+    print_instructions();
+    return 0;
+  } else {
+    for(int i = 1; i < ac; i++){
+      if(av[i] == string("-t")){
+        thread_mode = true;
+      }else if(av[i] == string("-b")){
+        thread_mode = false;
+      }else if(av[i] == string("-v")){
+        debug_mode = true;
+      }else{
+        cct_file_name = av[i];
+      }
+    }// end for
+  }
+  if(cct_file_name == "") {
+    cout << "Error: <circuit_file> was not provided" << endl;
+    print_instructions();
+    return 0;
+  }
+  if(thread_mode){
+    cout << "Threaded Mode" << endl;
+  }else{
+    cout << "Non-threaded Mode" << endl;
+  }
+  if(debug_mode){
+    cout << "Verbose Mode On" << endl;
+  }
+  cout << endl;
+
+  return cct_file_name;
+}
+
 bool net_number_exists(list<Net> net_list, int n){
 
   list<Net>::iterator iterator;
@@ -374,8 +432,13 @@ bool compare_fanout(const Block& first, const Block& second){
 }
 
 
-void traverse_tree(Node* node, list<Block>::iterator b_it){
+bool traverse_tree(Node* node, list<Block>::iterator b_it){
 
+  //if(thread_mode){
+  //  thread_size_lock.lock();
+  //  cout << "num_threads " << all_threads.size() << endl;
+  //  thread_size_lock.unlock();
+  //}
   nodes_visited ++;
   //if(debug_mode) cout << "node-num: "<< node->block->number << endl;
   node->lb = get_lower_bound(node);
@@ -396,31 +459,52 @@ void traverse_tree(Node* node, list<Block>::iterator b_it){
   }
   //is a leaf and cost is better
   if(node->is_leaf){
+    if(thread_mode) best_cost_lock.lock();
     if(node->lb < best_cost){
       best_cost = node->lb;
       best_leaf = node;
     }
     node->is_leaf = true;
+    if(thread_mode) best_cost_lock.unlock();    
     //if(debug_mode) cout << "better-leaf-cost!"<<endl;
   }
 
-  //cout << *node << endl;
+  //testinggggggg
+  std::thread::id this_id = std::this_thread::get_id();
+  thread_size_lock.lock();
+  cout << *node << " thread ID: " << this_id << endl;
+  thread_size_lock.unlock();
+
   if(node->is_pruned || node->is_leaf)
-    return;
+    return true;
+
 
   //is not a leaf, and we still havn't found our answer
   ++b_it;
   Node* lnode = new Node(&(*b_it), false); //left node
-  //cout << *lnode <<endl;
   lnode->parent = node;
   node->left = lnode;
-  traverse_tree(node->left, b_it);
 
   Node* rnode = new Node(&(*b_it), true); //right node
   rnode->parent = node;
   node->right = rnode;
-  traverse_tree(node->right, b_it);
 
+  if(thread_mode){
+    std::future<bool> left_finished = std::async(traverse_tree, node->left, b_it);
+    //all_threads.push_back(thread(traverse_tree, node->left, b_it));
+
+    std::future<bool> right_finished = std::async(traverse_tree, node->right, b_it);
+    //all_threads.push_back(thread(traverse_tree, node->right, b_it));
+  
+    //left_finished.get();
+    //right_finished.get();
+
+  } else {
+    traverse_tree(node->left, b_it);
+    traverse_tree(node->right, b_it);
+  }
+
+  return true;
 }
 
 int get_balance(Node* node){
