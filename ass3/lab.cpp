@@ -178,12 +178,6 @@ int main(int argc, char* const argv[]) {
   if(thread_mode){
     std::future<bool> main_finished = std::async(traverse_tree, root, tot_threads, b_it);
     main_finished.get();
-    //all_threads.push_back(thread(traverse_tree, root, b_it));
-
-   // list<thread>::iterator ti;
-   // for(ti = all_threads.begin(); ti !=all_threads.end(); ++ti){
-   //   (*ti).join();
-   // }
 
     clock_t comp_best = clock();
     //compare the best cost from all threads
@@ -217,9 +211,6 @@ int main(int argc, char* const argv[]) {
     init_graphics("ECE1387", WHITE); // window title
     update_message("Assignment 3 - 2015"); //bottom message
     set_visible_world(initial_coords);
-
-    //create_button ("Window", "Randomize FB", randomize_fixed_blocks); // name is UTF-8
-    //create_button ("Window", "Spread", spread_blocks); // name is UTF-8
 
     event_loop(NULL, NULL, NULL, drawscreen);   
     close_graphics ();
@@ -489,45 +480,18 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
     if(node->lb >= best_cost){
       node->is_pruned = true;
     }
-    //if(thread_best_cost.count(this_thread::get_id()) == 0){ //id not found
-    //  cout << "no thread with this id" << endl;
-    //  thread_best_cost[this_thread::get_id()] = best_cost;
-    ////thread's another leaf
-    ////compare with previous thread_best_cost
-    //} else {
-    //  if(node->lb >= thread_best_cost[this_thread::get_id()]){
-    //    node->is_pruned = true;
-    //  }
-    //}
+
   } else if(node->lb >= best_cost){
     node->is_pruned = true;
-    //if(debug_mode) cout << "broke-LB!"<<endl;
   }
   //is a leaf and cost is better
   if(node->is_leaf){
     if(thread_mode) best_cost_lock.lock();
     if(thread_mode){
 
-
       best_cost = node->lb;
       best_leaf = node; 
 
-      //this thread's first leaf
-      //set thread_best_cost to default best_cost
-      //if(thread_best_cost.count(this_thread::get_id()) == 0){ //id not found
-      //  cout << "no thread with this id" << endl;
-      //  thread_best_cost[this_thread::get_id()] = best_cost;
-      ////thread's another leaf
-      ////compare with previous thread_best_cost
-      //} else {
-
-      //  //cout << "found a best-er leaf!" <<endl;
-      //  if(node->lb < thread_best_cost[this_thread::get_id()]){
-      //  cout << "yes " << this_thread::get_id() << " " << node->lb << endl;
-      //    thread_best_cost[this_thread::get_id()] = node->lb;
-      //    thread_best_leaf[this_thread::get_id()] = node;
-      //  }
-      //}
     } else {
       if(node->lb < best_cost){
         best_cost = node->lb;
@@ -536,14 +500,7 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
     }
     node->is_leaf = true;
     if(thread_mode) best_cost_lock.unlock();    
-    //if(debug_mode) cout << "better-leaf-cost!"<<endl;
   }
-
-  //testinggggggg
-  //std::thread::id this_id = std::this_thread::get_id();
-  //thread_size_lock.lock();
-  //cout << *node << " thread ID: " << this_id << endl;
-  //thread_size_lock.unlock();
 
   if(node->is_pruned || node->is_leaf)
     return true;

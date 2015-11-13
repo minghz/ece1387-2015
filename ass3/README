@@ -4,12 +4,13 @@
 
 #To run program:
 
->./lab [cct1 | cct2 | cct3]
+>./lab [cct1 | cct2 | cct3 | cct4] [-no_disp] [-t]
 
-#line 293 sets the weight of the fake block pull
-    if(net.has_fake_block()) w_val = 10.0;
-    
-Buttons: 
+Examples:
+./lab cct1
+./lab cct1 -t -no_disp
 
-  Spread -> spreads the next block set
-  Randomize -> randomizes fixed blocks
+Options:
+  -no_disp            turns off graphics display
+  -t                  defines threaded option (non-threaded by default)
+
