@@ -2,6 +2,7 @@
 #include <cfloat> // for FLT_MAX
 #include <chrono>
 #include <thread>
+#include <chrono>
 #include <future>
 #include <cstdlib>
 #include <vector>
@@ -24,6 +25,8 @@ using namespace boost;
 bool debug_mode = false;
 int balance; //tot ntot num blocks / 2
 int best_cost;
+int milisecond_lag = 0;
+bool is_first_done = false; //is first thread finished?
 Node* best_leaf = NULL;
 int nodes_visited = 0;
 list<Block> block_list;
@@ -166,6 +169,10 @@ int main(int argc, char* const argv[]) {
 
   if(thread_mode) tot_threads = 4;
 
+  int num_b = block_list.size();
+  if(thread_mode) milisecond_lag = pow(num_b, (log(2000)/log(16)));
+  cout << "milisecond lag: "<< milisecond_lag << endl;
+
   clock_t begin = clock();
   if(thread_mode){
     std::future<bool> main_finished = std::async(traverse_tree, root, tot_threads, b_it);
@@ -177,6 +184,7 @@ int main(int argc, char* const argv[]) {
    //   (*ti).join();
    // }
 
+    clock_t comp_best = clock();
     //compare the best cost from all threads
     std::map<std::thread::id,int>::iterator tbc_it;
     for(tbc_it = thread_best_cost.begin();
@@ -187,6 +195,8 @@ int main(int argc, char* const argv[]) {
         best_cost = tbc_it->second;
       }
     }
+    clock_t comp_best_e = clock();
+    cout << "comparison time: " << (double)(comp_best_e - comp_best)/CLOCKS_PER_SEC;
   } else {
     traverse_tree(root, tot_threads, b_it);
   }
@@ -462,32 +472,58 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
   if(check_next == block_list.end()) node->is_leaf = true;
 
   //is balance violated?
-  if(node->balance > balance){
+  if(thread_mode){
+    if(node->balance > balance){
+      node->is_pruned = true;
+    }
+  } else if(node->balance > balance){
     node->is_pruned = true;
     //if(debug_mode) cout << "broke-balance!"<<endl;
   }
   //is higher than lower bound
-  if(node->lb >= best_cost){
+  if(thread_mode){
+    if(node->lb >= best_cost){
+      node->is_pruned = true;
+    }
+    //if(thread_best_cost.count(this_thread::get_id()) == 0){ //id not found
+    //  cout << "no thread with this id" << endl;
+    //  thread_best_cost[this_thread::get_id()] = best_cost;
+    ////thread's another leaf
+    ////compare with previous thread_best_cost
+    //} else {
+    //  if(node->lb >= thread_best_cost[this_thread::get_id()]){
+    //    node->is_pruned = true;
+    //  }
+    //}
+  } else if(node->lb >= best_cost){
     node->is_pruned = true;
     //if(debug_mode) cout << "broke-LB!"<<endl;
   }
   //is a leaf and cost is better
   if(node->is_leaf){
-    //if(thread_mode) best_cost_lock.lock();
+    if(thread_mode) best_cost_lock.lock();
     if(thread_mode){
+
+
+      best_cost = node->lb;
+      best_leaf = node; 
+
       //this thread's first leaf
       //set thread_best_cost to default best_cost
-      if(thread_best_cost.count(this_thread::get_id()) == 0){ //id not found
-        thread_best_cost[this_thread::get_id()] = best_cost;
-      //thread's another leaf
-      //compare with previous thread_best_cost
-      } else {
-        //cout << "found a best-er leaf!" <<endl;
-        if(node->lb < thread_best_cost[this_thread::get_id()]){
-          thread_best_cost[this_thread::get_id()] = node->lb;
-          thread_best_leaf[this_thread::get_id()] = node;
-        }
-      }
+      //if(thread_best_cost.count(this_thread::get_id()) == 0){ //id not found
+      //  cout << "no thread with this id" << endl;
+      //  thread_best_cost[this_thread::get_id()] = best_cost;
+      ////thread's another leaf
+      ////compare with previous thread_best_cost
+      //} else {
+
+      //  //cout << "found a best-er leaf!" <<endl;
+      //  if(node->lb < thread_best_cost[this_thread::get_id()]){
+      //  cout << "yes " << this_thread::get_id() << " " << node->lb << endl;
+      //    thread_best_cost[this_thread::get_id()] = node->lb;
+      //    thread_best_leaf[this_thread::get_id()] = node;
+      //  }
+      //}
     } else {
       if(node->lb < best_cost){
         best_cost = node->lb;
@@ -495,7 +531,7 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
       }
     }
     node->is_leaf = true;
-    //if(thread_mode) best_cost_lock.unlock();    
+    if(thread_mode) best_cost_lock.unlock();    
     //if(debug_mode) cout << "better-leaf-cost!"<<endl;
   }
 
@@ -521,13 +557,26 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
 
   if(thread_mode){
     if(tot_threads > 0){
-      
+      cout << "tot_threads :"<< tot_threads <<endl;
       tot_threads -= 2;
+      clock_t cl = clock();
       std::future<bool> left_finished = std::async(traverse_tree, node->left, tot_threads, b_it);
+
+      //sleep for one mili-second to send the prev thread ahead
+      std::this_thread::sleep_for(std::chrono::milliseconds(milisecond_lag));
+
+      while(!is_first_done); //first thread did not finish yet
+
+      clock_t cr = clock();
       std::future<bool> right_finished = std::async(traverse_tree, node->right, tot_threads, b_it);
 
     left_finished.get();
+    clock_t cle = clock();
     right_finished.get();
+    clock_t cre = clock();
+
+    cout << "left took: " << double(cle - cl) / CLOCKS_PER_SEC << endl;
+    cout << "right took: " << double(cre - cr) / CLOCKS_PER_SEC << endl;
 
       
     } else {
@@ -543,6 +592,10 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
     traverse_tree(node->right, tot_threads, b_it);
   }
 
+  if(!is_first_done && thread_mode){
+    is_first_done = true; //a leaf node will come here
+    cout << "ONE THREAD IS DONE" << endl;
+  }
   return true;
 }
 
