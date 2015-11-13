@@ -37,6 +37,7 @@ mutex best_cost_lock;
 mutex thread_size_lock;
 
 bool thread_mode = false;
+bool no_display = false;
 int tot_threads = 0;
 std::map<std::thread::id,int> thread_best_cost;
 std::map<std::thread::id,Node*> thread_best_leaf;
@@ -211,18 +212,19 @@ int main(int argc, char* const argv[]) {
   cout << "Seconds Elapsed: " << elapsed_secs << endl;
   cout << "Nodes Visited: " << nodes_visited << endl;
 
-	/**************** initialize display **********************/
-	init_graphics("ECE1387", WHITE); // window title
-	update_message("Assignment 3 - 2015"); //bottom message
-	set_visible_world(initial_coords);
+  if(!no_display){
+    /**************** initialize display **********************/
+    init_graphics("ECE1387", WHITE); // window title
+    update_message("Assignment 3 - 2015"); //bottom message
+    set_visible_world(initial_coords);
 
-	//create_button ("Window", "Randomize FB", randomize_fixed_blocks); // name is UTF-8
-	//create_button ("Window", "Spread", spread_blocks); // name is UTF-8
+    //create_button ("Window", "Randomize FB", randomize_fixed_blocks); // name is UTF-8
+    //create_button ("Window", "Spread", spread_blocks); // name is UTF-8
 
-	event_loop(NULL, NULL, NULL, drawscreen);   
-
-	close_graphics ();
-	std::cout << "Graphics closed down.\n";
+    event_loop(NULL, NULL, NULL, drawscreen);   
+    close_graphics ();
+    std::cout << "Graphics closed down.\n";
+  }
 
 	return (0);
 }
@@ -318,7 +320,7 @@ void print_instructions(void){
 string parse_input(int ac, char* const av[]){
 
   string cct_file_name = "";
-  if(ac > 4 || ac == 1){
+  if(ac > 5 || ac == 1){
     print_instructions();
     return 0;
   } else {
@@ -329,6 +331,8 @@ string parse_input(int ac, char* const av[]){
         thread_mode = false;
       }else if(av[i] == string("-v")){
         debug_mode = true;
+      }else if(av[i] == string("-no_disp")){
+        no_display = true;
       }else{
         cct_file_name = av[i];
       }
