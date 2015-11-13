@@ -27,7 +27,7 @@ HDR = graphics.h easygl_constants.h lab.h
 SRC = graphics.cpp lab.cpp
 EXE = lab
 BACKUP_FILENAME=`date "+backup-%Y%m%d-%H%M.zip"`
-FLAGS = -g -Wall -Wextra -pedantic -D$(PLATFORM) -std=c++11
+FLAGS = -g -Wall -Wextra -pedantic -D$(PLATFORM) -pthread -std=c++11
 
 BOOST_LIBS = -I boost_1_59_0 
 QUARTZ_LIBS = -I/usr/X11R6/include -L/usr/X11R6/lib
@@ -40,8 +40,8 @@ ifeq ($(PLATFORM),X11)
 endif
 
 $(EXE): graphics.o lab.o
-#	scl enable devtoolset-2 'g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(UMFPACK) $(LIBS) -o $(EXE)'
-	g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(LIBS) -o $(EXE)
+	scl enable devtoolset-2 'g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(LIBS) -o $(EXE)'
+	#g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(LIBS) -o $(EXE)
 
 test:
 	g++ test.cpp -o test
@@ -50,8 +50,8 @@ test:
 # $< evaluates to the name of the _first_ dependency (the .cpp file in this case)
 # $@ evaluates to the name of the target (the .o file in this case)
 %.o: %.cpp $(HDR) 
-#	scl enable devtoolset-2 'g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@'
-	g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@
+	scl enable devtoolset-2 'g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@'
+	#g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@
 
 # graphics.o: graphics.cpp $(HDR)
 # 	g++ -c $(FLAGS) graphics.cpp
