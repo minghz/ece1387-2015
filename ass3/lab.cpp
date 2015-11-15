@@ -14,7 +14,8 @@
 #include "graphics.h"
 #include "lab.h"
 #include "helpers.h"
-
+#include <time.h>
+#include <sys/time.h>
 
 using namespace std;
 using namespace boost;
@@ -69,6 +70,7 @@ int count_non_fixed_blocks(list<Block> block_list);
 int get_balance(Node* node);
 int get_lower_bound(Node * node);
 
+double get_wall_time();
 bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it);
 void draw_tree(Node * node, t_point position, int curr_block, int num_blocks);
 
@@ -174,12 +176,12 @@ int main(int argc, char* const argv[]) {
   if(thread_mode) milisecond_lag = pow(num_b, (log(2000)/log(16)));
   cout << "milisecond lag: "<< milisecond_lag << endl;
 
-  clock_t begin = clock();
+  double begin = get_wall_time();
   if(thread_mode){
     std::future<bool> main_finished = std::async(traverse_tree, root, tot_threads, b_it);
     main_finished.get();
 
-    clock_t comp_best = clock();
+    double comp_best = get_wall_time();
     //compare the best cost from all threads
     std::map<std::thread::id,int>::iterator tbc_it;
     for(tbc_it = thread_best_cost.begin();
@@ -190,14 +192,14 @@ int main(int argc, char* const argv[]) {
         best_cost = tbc_it->second;
       }
     }
-    clock_t comp_best_e = clock();
-    cout << "comparison time: " << (double)(comp_best_e - comp_best)/CLOCKS_PER_SEC;
+    double comp_best_e = get_wall_time();
+    cout << "comparison time: " << comp_best_e - comp_best;
   } else {
     traverse_tree(root, tot_threads, b_it);
   }
 
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  double end = get_wall_time();
+  double elapsed_secs = end - begin;
 
 
   cout << endl;
@@ -716,6 +718,14 @@ void print_best_result(Node* best_leaf){
     else
       cout << "\t" << n->block->number <<endl;
   }
+}
+double get_wall_time(){
+    struct timeval time;
+    if (gettimeofday(&time,NULL)){
+        //  Handle error
+        return 0;
+    }
+    return (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
 
 /* Button Handlers */
