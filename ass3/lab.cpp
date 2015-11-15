@@ -528,7 +528,8 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
       //sleep for one mili-second to send the prev thread ahead
       std::this_thread::sleep_for(std::chrono::milliseconds(milisecond_lag));
 
-      while(!is_first_done); //first thread did not finish yet
+//not working on ecf
+//      while(!is_first_done); //first thread did not finish yet
 
       clock_t cr = clock();
       std::future<bool> right_finished = std::async(traverse_tree, node->right, tot_threads, b_it);
@@ -555,10 +556,11 @@ bool traverse_tree(Node* node, int tot_threads, list<Block>::iterator b_it){
     traverse_tree(node->right, tot_threads, b_it);
   }
 
-  if(!is_first_done && thread_mode){
-    is_first_done = true; //a leaf node will come here
-    cout << "ONE THREAD IS DONE" << endl;
-  }
+//not working on ecf
+//  if(!is_first_done && thread_mode){
+//    is_first_done = true; //a leaf node will come here
+//    cout << "ONE THREAD IS DONE" << endl;
+//  }
   return true;
 }
 
