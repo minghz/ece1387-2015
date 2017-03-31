@@ -92,8 +92,8 @@ ifeq ($(PLATFORM),X11)
 endif
 
 $(EXE): graphics.o lab.o umfpack_matrix_solver.o
-	scl enable devtoolset-2 'g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(UMFPACK) $(LIBS) -o $(EXE)'
-#	g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(UMFPACK) $(LIBS) -o $(EXE)
+	#scl enable devtoolset-2 'g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(UMFPACK) $(LIBS) -o $(EXE)'
+	g++ $(FLAGS) $^ $(BOOST_LIBS) $(QUARTZ_LIBS) $(GRAPHICS_LIBS) $(UMFPACK) $(LIBS) -o $(EXE)
 
 test:
 	g++ test.cpp -o test
@@ -102,8 +102,8 @@ test:
 # $< evaluates to the name of the _first_ dependency (the .cpp file in this case)
 # $@ evaluates to the name of the target (the .o file in this case)
 %.o: %.cpp $(HDR) 
-	scl enable devtoolset-2 'g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@'
-#	g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@
+#	scl enable devtoolset-2 'g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@'
+	g++ -c $(FLAGS) $(BOOST_LIBS) $(QUARTZ_LIBS) $< -o $@
 
 umfpack_matrix_solver.o: umfpack_matrix_solver.c $(INC) $(UMFPACK)
 	$(C) -c -o umfpack_matrix_solver.o umfpack_matrix_solver.c $(UMFPACK) $(LIBS)
